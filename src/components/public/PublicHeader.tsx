@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useCart } from '@/hooks/useCart'
 import { useSession } from '@/hooks/useSession'
+import { logout } from '@/lib/auth/store'
 import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { LogoMark } from '@/components/ui/LogoMark'
@@ -49,10 +50,21 @@ export function PublicHeader() {
         <div className="flex items-center gap-2">
           <Link
             href={session ? '/cuenta' : '/entrar'}
+            aria-label={session ? `Mi cuenta, ${session.name}` : 'Entrar o crear cuenta'}
+            className="relative flex h-10 w-10 items-center justify-center rounded-[9px] text-ink ring-1 ring-line hover:bg-paper sm:h-11 sm:w-11 lg:hidden"
+          >
+            <Icon name="users" size={20} />
+            {session && (
+              <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-tomato" aria-hidden />
+            )}
+          </Link>
+          <Link
+            href={session ? '/cuenta' : '/entrar'}
+            aria-label={session ? `Mi cuenta, ${session.name}` : 'Entrar o crear cuenta'}
             className="hidden items-center gap-1.5 rounded-[9px] px-2.5 py-1.5 text-xs text-muted hover:text-ink lg:flex"
           >
             <Icon name="users" size={16} />
-            <span className="hidden xl:inline">{session ? session.name.split(' ')[0] : 'Entrar'}</span>
+            <span>{session ? session.name.split(' ')[0] : 'Entrar'}</span>
           </Link>
           <Link
             href="/cart"
@@ -75,7 +87,7 @@ export function PublicHeader() {
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="flex h-11 w-11 items-center justify-center rounded-[10px] text-ink ring-1 ring-line hover:bg-paper md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-[10px] text-ink ring-1 ring-line hover:bg-paper lg:hidden"
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={open}
           >
@@ -102,7 +114,8 @@ export function PublicHeader() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`absolute left-0 top-16 z-40 w-full border-t border-line bg-cream shadow-lg transition-all duration-250 ease-out md:hidden ${
+        inert={!open}
+        className={`absolute left-0 top-16 z-40 w-full border-t border-line bg-cream shadow-lg transition-all duration-250 ease-out lg:hidden ${
           open ? 'translate-y-0 opacity-100 max-h-[80vh] overflow-y-auto' : '-translate-y-2 opacity-0 pointer-events-none max-h-0'
         }`}
       >
@@ -117,24 +130,45 @@ export function PublicHeader() {
               {link.label}
             </Link>
           ))}
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <Link
-              href="/entrar"
-              onClick={() => setOpen(false)}
-              className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
-            >
-              <Icon name="users" size={17} />
-              Entrar
-            </Link>
-            <Link
-              href="/registro"
-              onClick={() => setOpen(false)}
-              className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
-            >
-              <Icon name="user-plus" size={17} />
-              Crear cuenta
-            </Link>
-          </div>
+          {session ? (
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <Link
+                href="/cuenta"
+                onClick={() => setOpen(false)}
+                className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
+              >
+                <Icon name="users" size={17} />
+                {session.name.split(' ')[0]}
+              </Link>
+              <button
+                type="button"
+                onClick={() => { setOpen(false); logout() }}
+                className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
+              >
+                <Icon name="log-out" size={17} />
+                Salir
+              </button>
+            </div>
+          ) : (
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <Link
+                href="/entrar"
+                onClick={() => setOpen(false)}
+                className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
+              >
+                <Icon name="users" size={17} />
+                Entrar
+              </Link>
+              <Link
+                href="/registro"
+                onClick={() => setOpen(false)}
+                className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
+              >
+                <Icon name="user-plus" size={17} />
+                Crear cuenta
+              </Link>
+            </div>
+          )}
           <Link
             href="/menu"
             onClick={() => setOpen(false)}

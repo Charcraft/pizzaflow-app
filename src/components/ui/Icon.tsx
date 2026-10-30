@@ -21,6 +21,7 @@ export type IconName =
   | 'users'
   | 'user-plus'
   | 'spark'
+  | 'log-out'
 
 const PATHS: Record<IconName, React.ReactNode> = {
   pizza: (
@@ -120,6 +121,13 @@ const PATHS: Record<IconName, React.ReactNode> = {
   ),
   spark: (
     <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
+  ),
+  'log-out': (
+    <>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="M16 17l5-5-5-5" />
+      <path d="M21 12H9" />
+    </>
   ),
 }
 
