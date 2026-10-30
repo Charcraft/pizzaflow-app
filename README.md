@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PizzaFlow
 
-## Getting Started
+Sistema integral para una pizzería pequeña con venta en mostrador y pedidos web para recoger en local (sin delivery).
 
-First, run the development server:
+**Equipo:** Grupo 4-C · UPChiapas · Análisis y Diseño de Software · 2026
+
+## Módulos
+
+| Ruta | Módulo | Descripción |
+|------|--------|-------------|
+| `/` | Landing | Presentación y acceso a los módulos |
+| `/menu` | Catálogo | Pizzas, bebidas y extras con variantes |
+| `/product/[id]` | Personalización | Tamaño, extras, mitad/mitad y precio en vivo |
+| `/cart` | Carrito | Persistencia local, cantidades y totales |
+| `/checkout` | Checkout | Datos de recogida, pago y creación de pedido |
+| `/order/[id]` | Seguimiento | Folio, estado y tiempo estimado |
+| `/mostrador` | POS | Alta de pedidos de mostrador |
+| `/cocina` | KDS | Comandas FIFO, semáforo y cronómetro de horno |
+| `/dashboard` | Métricas | Ventas, ticket promedio, tiempos y top productos |
+
+## Stack
+
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Tailwind CSS 4
+- Supabase (PostgreSQL + Auth + Realtime) para la versión conectada
+- Vitest no requerido: pruebas de humo con Playwright Core y PGlite
+
+## Modo demo
+
+La aplicación funciona sin Supabase: los pedidos y el carrito se guardan en
+`localStorage` mediante `src/lib/orders/store.ts` y `src/hooks/useCart.ts`.
+Los pedidos sembrados permiten ver el semáforo de cocina (verde, ámbar y rojo).
+
+## Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
+npm run typecheck    # tsc --noEmit
+npm run lint         # ESLint
+npm run build        # build de producción
+npm run test:schema  # aplica 001 + 002 + seed en Postgres WASM
+npm run test:e2e     # flujo menú -> carrito -> checkout -> seguimiento
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`test:e2e` requiere el servidor de desarrollo activo. Se puede apuntar a otro
+puerto con `BASE_URL=http://localhost:3002 npm run test:e2e`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Base de datos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+supabase start
+supabase db reset
+supabase gen types typescript --local > src/types/database.ts
+```
 
-## Learn More
+Migraciones:
 
-To learn more about Next.js, take a look at the following resources:
+- `supabase/migrations/001_init_schema.sql`: tablas base (perfiles, productos,
+  pedidos, items, promociones, analytics y feedback).
+- `supabase/migrations/002_full_schema.sql`: roles, mesas, recetas, inventario,
+  división de cuenta, reparto, bitácora, notificaciones y lealtad.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Datos de ejemplo: `src/lib/supabase/seed_full.sql`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Estructura
 
-## Deploy on Vercel
+```
+app/
+├── src/app/           # Rutas (landing, menú, mostrador, cocina, dashboard)
+├── src/components/    # Componentes reutilizables
+├── src/hooks/         # useCart, useOrders, useOvenClock
+├── src/lib/orders/    # Tipos y store de pedidos (modo demo)
+├── src/lib/menu/      # Catálogo compartido
+├── src/lib/supabase/  # Clientes browser/server/admin y seeds
+├── src/types/         # Tipos de base de datos
+├── scripts/           # Pruebas de humo y verificación de schema
+└── supabase/          # Migraciones SQL
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Variables de entorno
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copia `.env.example` a `.env.local` y llena los valores de tu proyecto Supabase.
+Sin variables configuradas la app sigue funcionando en modo demo.
+
+## Convenciones
+
+- Componentes en PascalCase, un componente por archivo.
+- Hooks con prefijo `use`.
+- Commits convencionales: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`.
+- Importes monetarios en centavos (`*_cents`).

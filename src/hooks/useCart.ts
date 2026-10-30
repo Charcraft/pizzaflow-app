@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useSyncExternalStore } from 'react'
+import type { OrderItemCustomization } from '@/lib/orders/types'
 
 export interface CartItem {
   id: string
@@ -10,7 +11,7 @@ export interface CartItem {
   variantName?: string
   quantity: number
   unitPriceCents: number
-  customizations?: Record<string, unknown>
+  customizations?: OrderItemCustomization[]
 }
 
 const STORAGE_KEY = 'pizzaflow-cart'
@@ -85,7 +86,7 @@ export function useCart() {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   const addItem = useCallback(
-    (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+    (item: Omit<CartItem, 'id' | 'quantity'> & { quantity?: number }) => {
       const current = getSnapshot()
       const existing = current.find(
         (entry) => entry.productId === item.productId && entry.variantId === item.variantId,

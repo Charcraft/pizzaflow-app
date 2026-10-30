@@ -1,94 +1,60 @@
+import Link from 'next/link'
 import { ProductCard } from '@/components/ProductCard'
-import { getProducts } from '@/lib/supabase/queries'
+import { DEMO_PRODUCTS } from '@/lib/menu/products'
 
-export async function generateMetadata() {
-  return {
-    title: 'Menú - PizzaFlow',
-    description: 'Pizzas artesanales, bebidas y extras'
-  }
+export const metadata = {
+  title: 'Menú - PizzaFlow',
+  description: 'Pizzas artesanales, bebidas y extras',
 }
 
-export default async function MenuPage() {
-  // TODO: Reemplazar con query real cuando Supabase esté configurado
-  // const products = await getProducts()
-  
-  const mockProducts = [
-    {
-      id: '1',
-      name: 'Pizza Margarita',
-      description: 'Salsa de tomate, mozzarella fresca y albahaca',
-      base_price_cents: 8500,
-      image_url: null,
-      category: 'pizza'
-    },
-    {
-      id: '2',
-      name: 'Pizza Pepperoni',
-      description: 'Salsa de tomate, mozzarella y pepperoni',
-      base_price_cents: 9500,
-      image_url: null,
-      category: 'pizza'
-    },
-    {
-      id: '3',
-      name: 'Pizza Hawaiana',
-      description: 'Salsa de tomate, mozzarella, jamón y piña',
-      base_price_cents: 9500,
-      image_url: null,
-      category: 'pizza'
-    },
-    {
-      id: '4',
-      name: 'Pizza Cuatro Quesos',
-      description: 'Mozzarella, parmesano, gorgonzola y provolone',
-      base_price_cents: 10500,
-      image_url: null,
-      category: 'pizza'
-    },
-    {
-      id: '5',
-      name: 'Refresco 600ml',
-      description: 'Coca Cola, Sprite o Fanta',
-      base_price_cents: 2500,
-      image_url: null,
-      category: 'bebida'
-    },
-    {
-      id: '6',
-      name: 'Agua 500ml',
-      description: 'Agua mineral',
-      base_price_cents: 1500,
-      image_url: null,
-      category: 'bebida'
-    }
-  ]
+const SECTIONS: Array<{ key: 'pizza' | 'bebida' | 'extra'; title: string }> = [
+  { key: 'pizza', title: 'Pizzas' },
+  { key: 'bebida', title: 'Bebidas' },
+  { key: 'extra', title: 'Extras' },
+]
+
+export default function MenuPage() {
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Nuestro Menú</h1>
-          <p className="text-gray-600 mt-2">Pizzas artesanales y bebidas refrescantes</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockProducts.map(product => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              description={product.description}
-              basePriceCents={product.base_price_cents}
-              imageUrl={product.image_url}
-              category={product.category}
-            />
-          ))}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8">
+          <div>
+            <Link href="/" className="text-sm text-red-600 hover:underline">
+              ← Inicio
+            </Link>
+            <h1 className="text-3xl font-bold text-gray-900 mt-2">Nuestro Menú</h1>
+            <p className="text-gray-600 mt-2">
+              Pizzas artesanales, bebidas y extras. Recoge en mostrador en 15-25 min.
+            </p>
+          </div>
+          <Link
+            href="/cart"
+            className="inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Ver carrito
+          </Link>
         </div>
 
+        {SECTIONS.map((section) => {
+          const products = DEMO_PRODUCTS.filter((product) => product.category === section.key)
+          if (products.length === 0) return null
+          return (
+            <section key={section.key} className="mb-10">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{section.title}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </section>
+          )
+        })}
+
         <div className="mt-12 p-6 bg-blue-50 rounded-xl border border-blue-200">
-          <h3 className="font-semibold text-blue-900 mb-2">Nota de desarrollo</h3>
+          <h3 className="font-semibold text-blue-900 mb-2">Personaliza tu pizza</h3>
           <p className="text-sm text-blue-800">
-            Esta vista usa datos mock. Conectar a Supabase en el próximo paso.
-            Las variantes (tamaños) y personalización se implementarán en PB-02.
+            Elige tamaño, extras y mitad/mitad desde el detalle de cada pizza. El precio se
+            recalcula en tiempo real.
           </p>
         </div>
       </div>

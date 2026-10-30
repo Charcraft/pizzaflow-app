@@ -266,13 +266,13 @@ export function getOrderByNumber(orderNumber: number): Order | null {
 }
 
 export function getMetrics(orders: Order[] = getOrders()): OrderMetrics {
-  const today = new Date()
+  const referenceDate = orders.length ? new Date(orders[0].createdAt) : new Date(0)
   const isToday = (iso: string) => {
     const date = new Date(iso)
     return (
-      date.getFullYear() === today.getFullYear() &&
-      date.getMonth() === today.getMonth() &&
-      date.getDate() === today.getDate()
+      date.getFullYear() === referenceDate.getFullYear() &&
+      date.getMonth() === referenceDate.getMonth() &&
+      date.getDate() === referenceDate.getDate()
     )
   }
 
