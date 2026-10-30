@@ -12,7 +12,7 @@ page.on('console', (msg) => {
 })
 page.on('pageerror', (error) => console.log(`[pageerror] ${error}`))
 
-for (const route of ['/dashboard', '/cocina', '/mostrador', '/']) {
+for (const route of ['/interno/dashboard', '/interno/cocina', '/interno/mostrador', '/interno', '/', '/menu']) {
   console.log(`\n=== ${route} ===`)
   await page.goto(`http://localhost:3002${route}`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(1500)

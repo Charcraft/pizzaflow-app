@@ -111,7 +111,7 @@ const html = `<!doctype html>
     <div class="brand">GRUPO 4-C · UPCHIAPAS</div>
     <div class="badge">Entrega v0.2.0 · 30 de octubre de 2026</div>
     <h1>PizzaFlow</h1>
-    <div class="subtitle">Sistema integral para pizzería pequeña<br/>Pedidos web, mostrador, cocina y dashboard</div>
+    <div class="subtitle">Sitio público de pedido + operación interna<br/>Dos experiencias, una sola marca</div>
   </div>
   <div class="meta">
     <table>
@@ -126,12 +126,12 @@ const html = `<!doctype html>
 </section>
 
 <h2>1. Resumen ejecutivo</h2>
-<p>PizzaFlow es el sistema de operación de una pizzería pequeña sin delivery. En esta
-entrega se implementó un flujo completo de pedido web para recoger en mostrador, un
-punto de venta (POS) para pedidos presenciales, una pantalla de cocina (KDS) con
-semáforo y cronómetro de horno, y un dashboard con métricas del día.</p>
+<p>PizzaFlow es el sistema de una pizzería pequeña sin delivery. La experiencia está
+dividida en dos mundos: el <b>sitio público</b>, donde el cliente pide y sigue su
+pedido, y la <b>operación interna</b>, donde el equipo usa el POS, la cocina (KDS)
+y el dashboard. El hub <code>/interno</code> es la única puerta entre ambos.</p>
 <div class="kpi">
-  <div><strong>4</strong>módulos operativos</div>
+  <div><strong>2</strong>experiencias separadas</div>
   <div><strong>22</strong>tablas en base de datos</div>
   <div><strong>31</strong>políticas RLS</div>
   <div><strong>13/13</strong>pruebas automatizadas</div>
@@ -153,24 +153,28 @@ las capturas en <code>docs/evidencias/</code>.</p>
   <tr><td>PB-07, PB-09, PB-10, PB-11, PB-13, PB-17</td><td>Inventario, pagos en línea, división de cuenta, avisos, roles y calificación</td><td>Fuera de alcance v0.2.0 (schema listo)</td></tr>
 </table>
 
-<h2>3. Arquitectura</h2>
+<h2>3. Arquitectura e información</h2>
+<p>La aplicación separa la navegación del cliente de la navegación del equipo.
+Ambas comparten el mismo store de pedidos y, en producción, la misma base Supabase.</p>
 <div class="arch">
-  <div class="box">LANDING<br/><span class="small">Catálogo y pedido</span></div>
-  <div class="box">MOSTRADOR<br/><span class="small">POS y cobro</span></div>
-  <div class="box">COCINA<br/><span class="small">KDS y horno</span></div>
-  <div class="box">DASHBOARD<br/><span class="small">Métricas</span></div>
+  <div class="box">SITIO PÚBLICO<br/><span class="small">Landing · Menú · Producto · Carrito · Checkout · Seguimiento</span></div>
 </div>
 <div class="arch">
-  <div class="arrow">↓</div>
+  <div class="box">HUB /interno<br/><span class="small">Única puerta al área operativa</span></div>
+</div>
+<div class="arch">
+  <div class="box">POS<br/><span class="small">Mostrador</span></div>
+  <div class="box">KDS<br/><span class="small">Cocina y horno</span></div>
+  <div class="box">DASHBOARD<br/><span class="small">Métricas</span></div>
 </div>
 <div class="arch">
   <div class="box">STORE DE PEDIDOS<br/><span class="small">localStorage + eventos</span></div>
   <div class="box">SUPABASE<br/><span class="small">PostgreSQL + RLS + Realtime</span></div>
 </div>
-<p>El store de pedidos es la fuente única en modo demo. Al conectar Supabase, las
-migraciones <code>001</code> y <code>002</code> crean las tablas y políticas RLS; el
-cliente de Supabase ya está configurado en <code>src/lib/supabase/</code>.</p>
-${image('01-landing.png', 'Landing pública con acceso a los cuatro módulos')}
+<p>El sitio público no enlaza a POS, KDS ni dashboard. Las rutas antiguas
+<code>/mostrador</code>, <code>/cocina</code> y <code>/dashboard</code> redirigen
+al área interna para conservar enlaces.</p>
+${image('01-landing.png', 'Landing pública: solo pedido y seguimiento')}
 
 <div class="page-break"></div>
 <h2>4. Modelo de datos</h2>
@@ -200,21 +204,33 @@ checkout con datos de recogida y seguimiento con folio y línea de tiempo.</p>
   ${image('04-carrito.png', 'Carrito con cantidades y totales')}
   ${image('05-checkout.png', 'Checkout para recoger en mostrador')}
 </div>
-${image('e2e-05-seguimiento.png', 'Seguimiento del pedido con folio y estado')}
+<div class="grid2">
+  ${image('06-seguimiento.png', 'Seguimiento del pedido con folio y estado')}
+  ${image('07-mis-pedidos.png', 'Mis pedidos recientes')}
+</div>
 
 <div class="page-break"></div>
-<h3>5.2 Mostrador (POS)</h3>
-<p>Búsqueda de productos, filtros por categoría, carrito lateral, datos de cliente,
-método de pago y creación de pedido con folio. El pedido se envía a la misma cola de cocina.</p>
-${image('10-mostrador-pedido.png', 'Pedido de mostrador creado con folio #1004')}
+<h3>5.2 Hub interno</h3>
+<p>El hub <code>/interno</code> concentra el estado del turno y las tres herramientas
+del equipo. Desde aquí se entra al POS, al KDS o al dashboard, y se vuelve al sitio
+público sin mezclar navegaciones.</p>
+${image('08-interno-hub.png', 'Hub de operación con estado del turno y accesos')}
 
-<h3>5.3 Cocina (KDS)</h3>
+<h3>5.3 Mostrador (POS)</h3>
+<p>Búsqueda de productos, filtros por categoría, ticket lateral, datos de cliente,
+método de pago y creación de pedido con folio. El pedido se envía a la misma cola de cocina.</p>
+<div class="grid2">
+  ${image('09-pos.png', 'POS de mostrador')}
+  ${image('10-pos-ticket.png', 'Pedido de mostrador enviado a cocina')}
+</div>
+
+<h3>5.4 Cocina (KDS)</h3>
 <p>Pedidos activos ordenados por antigüedad, semáforo de espera (verde &lt;1 min, ámbar
 1-2 min, rojo &gt;2 min), cambio de estado y cronómetro de horno con aviso visual y alarma.</p>
-${image('11-cocina-pedidos.png', 'Comandas activas con semáforo y folio')}
-${image('12-cocina-horno.png', 'Cronómetro de horno en 1:15 y 0:02')}
+${image('11-cocina.png', 'Comandas activas con semáforo y folio')}
+${image('12-cocina-horno.png', 'Cronómetro de horno en 1:20 y 0:02')}
 
-<h3>5.4 Dashboard</h3>
+<h3>5.5 Dashboard</h3>
 <p>Pedidos y ventas del día, ticket promedio, tiempo promedio pedido→listo, distribución
 por estado y top de productos.</p>
 ${image('13-dashboard.png', 'Dashboard con métricas del día')}
@@ -233,8 +249,13 @@ verificaciones de tipos, lint, build y schema.</p>
   <tr><th>Resultado</th><th>Prueba</th><th>Detalle</th></tr>
   ${resultRows(operacion)}
 </table>
-<h3>6.3 Verificación técnica</h3>
-<p><b>TypeScript:</b> sin errores. <b>ESLint:</b> sin errores. <b>Build:</b> 12 rutas generadas.</p>
+<h3>6.3 Responsive</h3>
+<div class="grid2">
+  ${image('14-mobile-landing.png', 'Landing a 390 px')}
+  ${image('15-mobile-menu.png', 'Menú a 390 px')}
+</div>
+<h3>6.4 Verificación técnica</h3>
+<p><b>TypeScript:</b> sin errores. <b>ESLint:</b> sin errores. <b>Build:</b> 17 rutas generadas.</p>
 <pre>${escapeHtml(readLog('build.txt').split('\n').slice(-18).join('\n'))}</pre>
 <p class="small">Logs completos: <code>docs/evidencias/typecheck.txt</code>,
 <code>lint.txt</code>, <code>build.txt</code>, <code>test-schema.txt</code>,
@@ -242,12 +263,13 @@ verificaciones de tipos, lint, build y schema.</p>
 
 <h2>7. Changelog v0.2.0</h2>
 <ul>
-  <li>Flujo web completo: landing, menú, producto, carrito, checkout y seguimiento.</li>
+  <li>Separación del sitio público y de la operación interna con el hub <code>/interno</code>.</li>
+  <li>Flujo web completo: landing, menú, producto, carrito, checkout, seguimiento y mis pedidos.</li>
   <li>POS de mostrador con folio y envío a cocina.</li>
   <li>KDS con FIFO, semáforo y cronómetro de horno.</li>
   <li>Dashboard con ventas, ticket, tiempos y top de productos.</li>
   <li>Migración 002 con roles, mesas, recetas, inventario, reparto, bitácora y lealtad.</li>
-  <li>Tailwind CSS 4 configurado y estilos activos.</li>
+  <li>Sistema de diseño con Fraunces/Inter, tokens y set de iconos SVG.</li>
   <li>Scripts de verificación de schema y pruebas E2E.</li>
 </ul>
 

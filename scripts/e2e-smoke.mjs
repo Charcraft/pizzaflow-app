@@ -1,4 +1,4 @@
-import { chromium } from 'playwright-core'
+﻿import { chromium } from 'playwright-core'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -22,26 +22,26 @@ page.on('pageerror', (error) => errors.push(String(error)))
 
 try {
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' })
-  check('landing responde', await page.getByText('Tu pizza, sin filas').isVisible())
+  check('landing responde', await page.getByText('Pizza de verdad').isVisible())
   await page.screenshot({ path: path.join(OUT, 'e2e-01-landing.png'), fullPage: true })
 
   await page.goto(`${BASE}/menu`, { waitUntil: 'networkidle' })
-  check('menu muestra pizzas', await page.getByRole('heading', { name: 'Pizzas' }).isVisible())
+  check('menu muestra pizzas', await page.getByRole('tab', { name: 'Pizzas' }).isVisible())
   await page.screenshot({ path: path.join(OUT, 'e2e-02-menu.png'), fullPage: true })
 
   await page.getByRole('link', { name: 'Personalizar' }).first().click()
   await page.waitForURL(/\/product\/1/)
-  check('detalle producto carga', await page.getByText('Mitad y mitad (opcional)').isVisible())
+  check('detalle producto carga', await page.getByText('Mitad y mitad').isVisible())
 
-  await page.getByLabel('Champiñones').check()
+  await page.getByRole('checkbox').first().check()
   await page.getByRole('button', { name: 'Agregar al carrito' }).click()
-  check('producto personalizado agregado', await page.getByText('✓ Agregado').isVisible())
+  check('producto personalizado agregado', await page.getByText('Agregado al carrito').isVisible())
   await page.screenshot({ path: path.join(OUT, 'e2e-03-producto.png'), fullPage: true })
 
   await page.goto(`${BASE}/cart`, { waitUntil: 'networkidle' })
   check('carrito conserva item', await page.getByText('Pizza Margarita').isVisible())
 
-  await page.getByRole('link', { name: 'Proceder al checkout' }).click()
+  await page.getByRole('link', { name: 'Ir al checkout' }).click()
   await page.waitForURL(/\/checkout/)
   await page.locator('#customer-name').fill('Carlos Prueba')
   await page.locator('#customer-phone').fill('9611234567')
@@ -49,7 +49,7 @@ try {
   await page.getByRole('button', { name: /Confirmar pedido/ }).click()
   await page.waitForURL(/\/order\//, { timeout: 15000 })
 
-  check('pedido creado con folio', await page.getByText('Folio').isVisible())
+  check('pedido creado con folio', await page.getByText('Folio', { exact: true }).isVisible())
   const folio = await page.locator('h1').first().textContent()
   check('folio generado', /#\d+/.test(folio || ''), folio || '')
   await page.screenshot({ path: path.join(OUT, 'e2e-05-seguimiento.png'), fullPage: true })

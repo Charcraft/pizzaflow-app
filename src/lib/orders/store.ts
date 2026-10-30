@@ -127,6 +127,7 @@ function demoOrders(): Order[] {
       ovenStartedAt: demo.status === 'in_oven' ? minutesAgoIso(1.2) : null,
       ovenEndedAt: null,
       readyAt: null,
+      isDemo: true,
     }
   })
 }
@@ -228,6 +229,7 @@ export function createOrder(input: CreateOrderInput): Order {
     ovenStartedAt: null,
     ovenEndedAt: null,
     readyAt: null,
+    isDemo: false,
   }
 
   persist([order, ...orders])

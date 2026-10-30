@@ -51,6 +51,7 @@ export interface Order {
   ovenStartedAt: string | null
   ovenEndedAt: string | null
   readyAt: string | null
+  isDemo?: boolean
 }
 
 export type CreateOrderItemInput = Omit<OrderItem, 'id' | 'totalPriceCents'>

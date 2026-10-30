@@ -12,10 +12,16 @@ export function useOvenClock(ovenStartedAt: string | null) {
     if (!ovenStartedAt) return
 
     const start = new Date(ovenStartedAt).getTime()
-    const id = setInterval(() => {
+    const tick = () => {
       setSeconds(Math.max(0, Math.floor((Date.now() - start) / 1000)))
-    }, 1000)
-    return () => clearInterval(id)
+    }
+    // Primer tick después del paint: evita setState síncrono en el effect.
+    const timeout = setTimeout(tick, 0)
+    const id = setInterval(tick, 1000)
+    return () => {
+      clearTimeout(timeout)
+      clearInterval(id)
+    }
   }, [ovenStartedAt])
 
   useEffect(() => {

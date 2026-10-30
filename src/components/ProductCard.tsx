@@ -4,11 +4,19 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useCart } from '@/hooks/useCart'
 import { formatMoney, type DemoProduct } from '@/lib/menu/products'
+import { Icon, type IconName } from '@/components/ui/Icon'
+import { PizzaArt } from '@/components/public/PizzaArt'
 
-const CATEGORY_ICON: Record<DemoProduct['category'], string> = {
-  pizza: '🍕',
-  bebida: '🥤',
-  extra: '🍗',
+const CATEGORY_ICON: Record<DemoProduct['category'], IconName> = {
+  pizza: 'pizza',
+  bebida: 'bag',
+  extra: 'flame',
+}
+
+const CATEGORY_LABEL: Record<DemoProduct['category'], string> = {
+  pizza: 'Pizza',
+  bebida: 'Bebida',
+  extra: 'Extra',
 }
 
 export function ProductCard({ product }: { product: DemoProduct }) {
@@ -34,30 +42,42 @@ export function ProductCard({ product }: { product: DemoProduct }) {
   }
 
   return (
-    <article className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
-      <div className="aspect-[4/3] bg-gradient-to-br from-orange-50 to-red-50 relative">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-6xl">{CATEGORY_ICON[product.category]}</span>
-        </div>
-        <span className="absolute top-3 left-3 px-2 py-1 text-xs font-medium bg-white/90 backdrop-blur rounded-full capitalize">
-          {product.category}
+    <article className="flex flex-col overflow-hidden rounded-card border border-line bg-paper shadow-soft transition-transform duration-200 hover:-translate-y-0.5">
+      <div className="relative flex aspect-[5/4] items-center justify-center bg-[#F6E3C5]">
+        {product.category === 'pizza' ? (
+          <PizzaArt className="h-[82%]" rotation={(Number(product.id) * 11) % 18 - 9} />
+        ) : (
+          <Icon
+            name={CATEGORY_ICON[product.category]}
+            size={64}
+            className="text-tomato/80"
+            strokeWidth={1.2}
+          />
+        )}
+        <span className="absolute left-3 top-3 rounded-full bg-paper/90 px-2.5 py-1 text-[11px] font-medium text-muted">
+          {CATEGORY_LABEL[product.category]}
         </span>
       </div>
 
-      <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-gray-900">{product.name}</h3>
-        <p className="text-sm text-gray-600 mt-1 line-clamp-2 flex-1">{product.description}</p>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="text-base font-semibold text-ink">{product.name}</h3>
+        <p className="mt-1 line-clamp-2 flex-1 text-sm leading-6 text-muted">
+          {product.description}
+        </p>
 
         {product.variants.length > 0 && (
-          <div className="mt-3">
-            <label className="block text-xs text-gray-600 mb-1" htmlFor={`variant-${product.id}`}>
+          <div className="mt-4">
+            <label
+              className="mb-1 block text-[11px] font-medium uppercase tracking-[0.1em] text-muted"
+              htmlFor={`variant-${product.id}`}
+            >
               Tamaño
             </label>
             <select
               id={`variant-${product.id}`}
               value={selectedVariantId}
               onChange={(event) => setSelectedVariantId(event.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="h-10 w-full rounded-[10px] border border-line bg-cream px-3 text-sm text-ink focus:border-tomato focus:outline-none"
             >
               {product.variants.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -68,25 +88,38 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           </div>
         )}
 
-        <div className="flex flex-wrap items-center justify-between mt-4 gap-2">
-          <span className="text-lg font-bold text-red-600">{formatMoney(unitPriceCents)}</span>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+          <span className="tabular text-lg font-semibold text-ink">
+            {formatMoney(unitPriceCents)}
+          </span>
           <div className="flex items-center gap-2">
             <Link
               href={`/product/${product.id}`}
-              className="px-3 py-2 text-sm border border-red-200 text-red-700 rounded-lg hover:bg-red-50"
+              className="inline-flex h-10 items-center rounded-[10px] border border-line px-3 text-sm font-medium text-ink hover:bg-cream"
             >
               Personalizar
             </Link>
             <button
               type="button"
               onClick={handleAdd}
-              className={`px-3 py-2 text-sm rounded-lg font-medium transition ${
+              aria-label={`Agregar ${product.name} al carrito`}
+              className={`inline-flex h-10 items-center gap-1.5 rounded-[10px] px-3 text-sm font-medium transition-colors ${
                 added
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-red-600 text-white hover:bg-red-700'
+                  ? 'bg-basil/10 text-basil'
+                  : 'bg-tomato text-white hover:bg-tomato-deep'
               }`}
             >
-              {added ? '✓ Agregado' : '+ Agregar'}
+              {added ? (
+                <>
+                  <Icon name="check" size={15} />
+                  Agregado
+                </>
+              ) : (
+                <>
+                  <Icon name="plus" size={15} />
+                  Agregar
+                </>
+              )}
             </button>
           </div>
         </div>

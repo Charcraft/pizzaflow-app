@@ -1,12 +1,58 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-cream: #fff8f0;
+  --color-paper: #ffffff;
+  --color-ink: #1c1917;
+  --color-muted: #78716c;
+  --color-line: #e7e0d8;
+  --color-tomato: #c2410c;
+  --color-tomato-deep: #9a3412;
+  --color-basil: #15803d;
+  --color-amber: #b45309;
+  --color-night: #0c0a09;
+  --color-night-soft: #1c1917;
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --radius-card: 16px;
+  --radius-panel: 24px;
+  --shadow-soft: 0 1px 2px rgb(28 25 23 / 0.06), 0 8px 24px rgb(28 25 23 / 0.04);
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-tomato);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: #fed7aa;
+    color: var(--color-ink);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
