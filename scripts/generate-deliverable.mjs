@@ -303,7 +303,7 @@ verificaciones de tipos, lint, build y schema.</p>
 <h2>8. Contribuciones</h2>
 <table>
   <tr><th>Integrante</th><th>Rol</th><th>Funcionalidad</th><th>Horas</th></tr>
-  <tr><td>Carlos de Jesús Martínez Pineda</td><td>Fullstack</td><td>Flujo web, store de pedidos, migración 002 y RLS</td><td>12</td></tr>
+  <tr><td>Carlos de Jesús Martínez Pineda</td><td>Fullstack</td><td>Flujo web, cuentas, promociones, WhatsApp, schema y RLS</td><td>16</td></tr>
   <tr><td>Carlos Adrián Alarcón Valencia</td><td>Fullstack</td><td>POS, KDS, semáforo, cronómetro y dashboard</td><td>10</td></tr>
   <tr><td>Santos Enoch González Pérez</td><td>Scrum Master</td><td>Integración, verificación de schema, build y estilos</td><td>4</td></tr>
   <tr><td>Leonardo Nucamendi Ruiz</td><td>Product Owner</td><td>Validación de alcance, pruebas y documentación</td><td>3</td></tr>
