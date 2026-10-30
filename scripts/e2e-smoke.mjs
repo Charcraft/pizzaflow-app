@@ -31,6 +31,12 @@ const errors = []
 page.on('pageerror', (error) => errors.push(String(error)))
 
 try {
+  await page.goto(`${BASE}/interno`, { waitUntil: 'networkidle' })
+  check(
+    'interno protegido sin sesion',
+    await page.getByText('Acceso al equipo').isVisible(),
+  )
+
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' })
   check('landing responde', await page.getByText('Pizza de verdad').isVisible())
   await page.screenshot({ path: path.join(OUT, 'e2e-01-landing.png'), fullPage: true })

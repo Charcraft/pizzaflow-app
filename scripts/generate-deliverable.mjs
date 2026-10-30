@@ -134,7 +134,7 @@ y el dashboard. El hub <code>/interno</code> es la única puerta entre ambos.</p
   <div><strong>2</strong>experiencias separadas</div>
   <div><strong>22</strong>tablas en base de datos</div>
   <div><strong>31</strong>políticas RLS</div>
-  <div><strong>19/19</strong>pruebas automatizadas</div>
+  <div><strong>20/20</strong>pruebas automatizadas</div>
 </div>
 <div class="note">La aplicación funciona en modo demostración con <b>localStorage</b> y también
 incluye las migraciones SQL para conectarla a Supabase cuando el proyecto esté aprovisionado.</div>
