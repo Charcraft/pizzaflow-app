@@ -18,6 +18,11 @@ export function useOvenClock(ovenStartedAt: string | null) {
     return () => clearInterval(id)
   }, [ovenStartedAt])
 
+  useEffect(() => {
+    hasNotified130.current = false
+    hasNotified200.current = false
+  }, [ovenStartedAt])
+
   const effectiveSeconds = ovenStartedAt ? seconds : 0
 
   useEffect(() => {
@@ -47,7 +52,7 @@ export function useOvenClock(ovenStartedAt: string | null) {
         osc.start()
         osc.stop(ctx.currentTime + 0.3)
       } catch {
-        // Audio no disponible; la alerta visual ya se encarga de notificar.
+        // Audio no disponible; la alerta visual ya notifica.
       }
     }
   }, [effectiveSeconds])
