@@ -68,7 +68,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-4 gap-2">
+        <div className="flex flex-wrap items-center justify-between mt-4 gap-2">
           <span className="text-lg font-bold text-red-600">{formatMoney(unitPriceCents)}</span>
           <div className="flex items-center gap-2">
             <Link
