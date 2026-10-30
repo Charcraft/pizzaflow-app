@@ -15,7 +15,7 @@ Sistema integral para una pizzería pequeña con venta en mostrador y pedidos we
 
 **Cuenta admin demo:**  
 Email: pinedadeidad@67.com  
-Contraseña: `Leito2026!`  
+Contraseña: `alarconesgay`  
 Rol: admin  
 *Solo para pruebas locales. En producción usar Supabase Auth.*
 
