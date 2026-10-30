@@ -41,6 +41,8 @@ npm run lint         # ESLint
 npm run build        # build de producción
 npm run test:schema  # aplica 001 + 002 + seed en Postgres WASM
 npm run test:e2e     # flujo menú -> carrito -> checkout -> seguimiento
+npm run test:operacion  # flujo mostrador -> cocina -> dashboard
+npm run deliverable  # genera el PDF de entrega con las evidencias
 ```
 
 `test:e2e` requiere el servidor de desarrollo activo. Se puede apuntar a otro

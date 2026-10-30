@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test:schema": "node scripts/check-schema.mjs",
-    "test:e2e": "node scripts/e2e-smoke.mjs"
+    "test:e2e": "node scripts/e2e-smoke.mjs",
+    "test:operacion": "node scripts/e2e-operacion.mjs",
+    "deliverable": "node scripts/generate-deliverable.mjs"
   },
   "dependencies": {
     "@supabase/auth-js": "^2.118.0",
