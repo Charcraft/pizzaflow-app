@@ -94,3 +94,31 @@ app/
 
 Copia `.env.example` a `.env.local` y llena los valores de tu proyecto Supabase.
 Sin variables configuradas la app sigue funcionando en modo demo.
+
+## Instrucciones para el equipo
+
+Para entender el proyecto completo revisen la documentación entregada:
+
+- `docs/00-setup/entrega-v0.2.0.pdf` – Entrega v0.2.0 con capturas reales contra http://localhost:3002, catálogo solo de pizzas, navbar móvil con autenticación y flujo POS→KDS→Dashboard.
+- `docs/00-setup/entrega-v0.0.1.pdf` – Entrega inicial con arquitectura, esquema de base de datos y flujos base.
+- `docs/flow_pizzaflow.png` – Diagrama de flujo general del sistema.
+
+Qué se hizo en cada módulo v0.2.0:
+- **Landing** `/` : Presentación pública, promos y acceso rápido a módulos. Capturas 01-05.
+- **Catálogo** `/menu` : Solo pizzas, sin bebidas ni extras. Filtros por categoría Pizzas/Todo. Personalización por tamaño y extras con precio vivo. Capturas 06-09.
+- **Mostrador POS** `/mostrador` : Alta de pedidos desde mostrador, persistencia local, impresión de ticket. Captura 10.
+- **Cocina KDS** `/cocina` : Lista en tiempo real, FIFO, semáforo de espera, cronómetro de horno con aviso a 1:30 y alarma a 2:00. Captura 11.
+- **Dashboard** `/dashboard` : Métricas de ventas, ticket promedio, top productos, tiempos de horno y feedback. Capturas 12-13.
+
+Archivos clave modificados en esta versión:
+- `src/lib/menu/products.ts` – Catálogo demo limitado a pizzas.
+- `src/components/public/MenuBrowser.tsx` – Sin tabs Bebidas/Extras.
+- `src/components/public/PublicHeader.tsx` – Botones Entrar / Crear cuenta en navbar móvil.
+- `src/components/ui/Icon.tsx` – Icono user-plus agregado.
+
+Cuenta admin demo para pruebas:
+Email: pinedadeidad@67.com
+Contraseña: `alarconesgay`
+Repositorio privado de verdad: https://github.com/Charcraft/pizzaflow-app-private
+
+Revisen la documentación y el diagrama de flujo para poder explicar el proyecto en clase.
