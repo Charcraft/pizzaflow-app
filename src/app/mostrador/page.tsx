@@ -51,10 +51,7 @@ export default function MostradorPage() {
         variantName: item.variantName,
         quantity: item.quantity,
         unitPriceCents: item.unitPriceCents,
-        customizations: item.customizations ? Object.entries(item.customizations).map(([name]) => ({
-          name,
-          priceCents: 0
-        })) : undefined
+        customizations: item.customizations,
       })),
       paymentMethod,
       paymentStatus: 'pending'
