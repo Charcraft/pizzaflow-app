@@ -3,7 +3,7 @@
 import { useOrders } from '@/hooks/useOrders'
 import { OrderCard } from '@/components/orders/OrderCard'
 import { updateOrderStatus } from '@/lib/orders/store'
-import { ACTIVE_STATUSES } from '@/lib/orders/types'
+import { ACTIVE_STATUSES, type OrderStatus } from '@/lib/orders/types'
 
 export default function CocinaPage() {
   const orders = useOrders()
@@ -12,7 +12,7 @@ export default function CocinaPage() {
     .filter(o => ACTIVE_STATUSES.includes(o.status))
     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 
-  const handleUpdateStatus = (id: string, status: 'pending' | 'confirmed' | 'preparing' | 'in_oven' | 'ready' | 'completed' | 'cancelled') => {
+  const handleUpdateStatus = (id: string, status: OrderStatus) => {
     updateOrderStatus(id, status)
   }
 

@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useOrders } from '@/hooks/useOrders'
 import { getMetrics } from '@/lib/orders/store'
 import { formatMoney } from '@/lib/menu/products'
@@ -14,7 +15,7 @@ function formatIsoTime(iso: string): string {
 
 export default function DashboardPage() {
   const orders = useOrders()
-  const metrics = getMetrics(orders)
+  const metrics = useMemo(() => getMetrics(orders), [orders])
   const lastUpdate = orders[0] ? formatIsoTime(orders[0].updatedAt) : null
 
   const cards = [
@@ -32,9 +33,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Dashboard Dueño</h1>
           <div className="text-xs text-gray-500">
-            {lastUpdate
-              ? `Último pedido: ${lastUpdate}`
-              : 'Sin pedidos registrados'}
+            {lastUpdate ? `Último pedido: ${lastUpdate}` : 'Sin pedidos registrados'}
           </div>
         </div>
 
@@ -59,7 +58,7 @@ export default function DashboardPage() {
                     <span className="font-medium">{count}</span>
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-red-500"
                       style={{ width: `${Math.min(100, (count / Math.max(...Object.values(metrics.byStatus), 1)) * 100)}%` }}
                     />
@@ -80,7 +79,7 @@ export default function DashboardPage() {
                   <div className="flex-1">
                     <div className="text-sm font-medium">{product.name}</div>
                     <div className="h-2 bg-gray-100 rounded-full overflow-hidden mt-1">
-                      <div 
+                      <div
                         className="h-full bg-blue-500"
                         style={{ width: `${(product.quantity / maxTop) * 100}%` }}
                       />

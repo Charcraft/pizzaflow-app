@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 
 export function useOvenClock(ovenStartedAt: string | null) {
-  const [seconds, setSeconds] = useState(() => 0)
+  const [seconds, setSeconds] = useState(0)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const hasNotified130 = useRef(false)
   const hasNotified200 = useRef(false)
@@ -12,32 +12,30 @@ export function useOvenClock(ovenStartedAt: string | null) {
     if (!ovenStartedAt) return
 
     const start = new Date(ovenStartedAt).getTime()
-    const tick = () => {
-      const elapsed = Math.floor((Date.now() - start) / 1000)
-      setSeconds(Math.max(0, elapsed))
-    }
-    
-    tick()
-    const id = setInterval(tick, 1000)
+    const id = setInterval(() => {
+      setSeconds(Math.max(0, Math.floor((Date.now() - start) / 1000)))
+    }, 1000)
     return () => clearInterval(id)
   }, [ovenStartedAt])
 
+  const effectiveSeconds = ovenStartedAt ? seconds : 0
+
   useEffect(() => {
-    if (seconds >= 90 && !hasNotified130.current) {
+    if (effectiveSeconds >= 90 && !hasNotified130.current) {
       hasNotified130.current = true
       if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
         new Notification('Horno: 1:30')
       }
     }
-  }, [seconds])
+  }, [effectiveSeconds])
 
   useEffect(() => {
-    if (seconds >= 120 && !hasNotified200.current) {
+    if (effectiveSeconds >= 120 && !hasNotified200.current) {
       hasNotified200.current = true
       try {
         if (!audioCtxRef.current) {
-          const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-          audioCtxRef.current = new AudioCtx()
+          const Ctor = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+          audioCtxRef.current = new Ctor()
         }
         const ctx = audioCtxRef.current
         const osc = ctx.createOscillator()
@@ -48,15 +46,22 @@ export function useOvenClock(ovenStartedAt: string | null) {
         gain.gain.setValueAtTime(0.3, ctx.currentTime)
         osc.start()
         osc.stop(ctx.currentTime + 0.3)
-      } catch {}
+      } catch {
+        // Audio no disponible; la alerta visual ya se encarga de notificar.
+      }
     }
-  }, [seconds])
+  }, [effectiveSeconds])
 
-  const minutes = Math.floor(seconds / 60)
-  const secs = seconds % 60
+  const minutes = Math.floor(effectiveSeconds / 60)
+  const secs = effectiveSeconds % 60
   const formatted = `${minutes}:${secs.toString().padStart(2, '0')}`
-  const triggered130 = seconds >= 90
-  const triggered200 = seconds >= 120
 
-  return { seconds, formatted, minutes, triggered130, triggered200, isActive: !!ovenStartedAt }
+  return {
+    seconds: effectiveSeconds,
+    formatted,
+    minutes,
+    triggered130: effectiveSeconds >= 90,
+    triggered200: effectiveSeconds >= 120,
+    isActive: !!ovenStartedAt,
+  }
 }

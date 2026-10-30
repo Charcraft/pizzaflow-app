@@ -12,14 +12,14 @@ interface OrderCardProps {
 }
 
 export function OrderCard({ order, onUpdateStatus, compact }: OrderCardProps) {
-  const [nowTick, setNowTick] = useState(() => Date.now())
+  const [now, setNow] = useState<number | null>(null)
   useEffect(() => {
-    const id = setInterval(() => setNowTick(Date.now()), 1000 * 30)
+    const id = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(id)
   }, [])
-  
+
   const createdAt = new Date(order.createdAt)
-  const elapsedMinutes = (nowTick - createdAt.getTime()) / 60000
+  const elapsedMinutes = now === null ? 0 : (now - createdAt.getTime()) / 60000
   
   let semaphore = 'bg-green-500'
   if (elapsedMinutes > 2) semaphore = 'bg-red-500'
