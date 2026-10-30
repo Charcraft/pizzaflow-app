@@ -275,11 +275,9 @@ export interface Database {
         Update: { id?: string; account_id?: string; type?: string | null; points?: number; order_id?: string | null; expires_at?: string | null; created_at?: string }
       }
     }
-  }
-}
-    Views: {}
-    Functions: {}
-    Enums: {}
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    Enums: Record<string, never>
   }
 }
 
