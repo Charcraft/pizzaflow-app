@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useCart } from '@/hooks/useCart'
+import { useSession } from '@/hooks/useSession'
 import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { LogoMark } from '@/components/ui/LogoMark'
@@ -17,11 +18,12 @@ const LINKS = [
 export function PublicHeader() {
   const pathname = usePathname()
   const { totalItems } = useCart()
+  const session = useSession()
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/80 bg-cream/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
+    <header className="relative sticky top-0 z-40 border-b border-line/80 bg-cream/85 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5" aria-label="PizzaFlow, inicio">
           <LogoMark />
           <span className="text-lg font-semibold tracking-tight text-ink">PizzaFlow</span>
@@ -45,6 +47,13 @@ export function PublicHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link
+            href={session ? '/cuenta' : '/entrar'}
+            className="hidden items-center gap-1.5 rounded-[10px] px-3 py-2 text-sm text-muted hover:text-ink lg:flex"
+          >
+            <Icon name="users" size={17} />
+            {session ? session.name.split(' ')[0] : 'Entrar'}
+          </Link>
           <Link
             href="/cart"
             className="relative flex h-11 w-11 items-center justify-center rounded-[10px] text-ink ring-1 ring-line hover:bg-paper"
@@ -70,38 +79,54 @@ export function PublicHeader() {
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={open}
           >
-            <span className="space-y-1.5">
-              <span className="block h-0.5 w-5 bg-ink" />
-              <span className="block h-0.5 w-5 bg-ink" />
+            <span className="relative block h-3 w-5">
+              <span
+                className={`absolute left-0 top-0 h-0.5 w-5 bg-ink transition-transform duration-200 ease-in-out ${
+                  open ? 'translate-y-1.5 rotate-45' : ''
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-1.5 h-0.5 w-5 bg-ink transition-opacity duration-200 ${
+                  open ? 'opacity-0' : 'opacity-100'
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-3 h-0.5 w-5 bg-ink transition-transform duration-200 ease-in-out ${
+                  open ? '-translate-y-1.5 -rotate-45' : ''
+                }`}
+              />
             </span>
           </button>
         </div>
       </div>
 
-      {open && (
-        <div className="border-t border-line bg-cream md:hidden">
-          <nav className="mx-auto flex max-w-6xl flex-col px-5 py-3" aria-label="Navegación móvil">
-            {LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="rounded-[10px] px-2 py-3 text-sm text-ink hover:bg-paper"
-              >
-                {link.label}
-              </Link>
-            ))}
+              {/* Mobile Menu Overlay */}
+      <div
+        className={`absolute left-0 top-16 z-50 w-full transform border-b border-line bg-cream transition-all duration-200 ease-out md:hidden ${
+          open ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0 pointer-events-none'
+        }`}
+      >
+        <nav className="mx-auto flex max-w-6xl flex-col px-5 py-3" aria-label="Navegación móvil">
+          {LINKS.map((link) => (
             <Link
-              href="/menu"
+              key={link.href}
+              href={link.href}
               onClick={() => setOpen(false)}
-              className="mt-2 flex h-11 items-center justify-center gap-2 rounded-[10px] bg-tomato text-sm font-medium text-white"
+              className="flex h-12 items-center rounded-[10px] px-3 text-sm text-ink hover:bg-paper active:bg-paper"
             >
-              Pedir ahora
-              <Icon name="arrow-right" size={16} />
+              {link.label}
             </Link>
-          </nav>
-        </div>
-      )}
+          ))}
+          <Link
+            href="/menu"
+            onClick={() => setOpen(false)}
+            className="mt-3 flex h-12 items-center justify-center gap-2 rounded-[10px] bg-tomato text-sm font-medium text-white shadow-sm"
+          >
+            Pedir ahora
+            <Icon name="arrow-right" size={16} />
+          </Link>
+        </nav>
+      </div>
     </header>
   )
 }
