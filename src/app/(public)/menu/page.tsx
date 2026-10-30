@@ -31,6 +31,17 @@ export default function MenuPage() {
         </Link>
       </div>
 
+      <div className="mt-6 flex flex-col gap-2 rounded-card border border-tomato/20 bg-tomato/5 p-3.5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="flex items-center gap-2 text-sm text-ink">
+          <Icon name="spark" size={16} className="text-tomato" />
+          <span>
+            <strong>10% en tu primer pedido</strong> con el código{' '}
+            <span className="font-mono font-semibold">BIENVENIDO10</span>
+          </span>
+        </p>
+        <span className="text-xs text-muted">Aplícalo en el carrito · mínimo $100</span>
+      </div>
+
       <div className="mt-8">
         <MenuBrowser />
       </div>

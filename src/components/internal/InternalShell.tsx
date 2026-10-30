@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { LogoMark } from '@/components/ui/LogoMark'
+import { useSession } from '@/hooks/useSession'
+import { logout } from '@/lib/auth/store'
 
 const NAV: Array<{ href: string; label: string; icon: IconName; hint: string }> = [
   { href: '/interno', label: 'Resumen', icon: 'home', hint: 'Estado del turno' },
@@ -20,6 +22,13 @@ function isActive(pathname: string, href: string): boolean {
 
 export function InternalShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const session = useSession()
+
+  const handleLogout = () => {
+    logout()
+    router.replace('/login')
+  }
 
   return (
     <div className="min-h-screen bg-[#F3F0EA] text-ink">
@@ -76,6 +85,26 @@ export function InternalShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="border-t border-white/10 p-3">
+          <div className="mb-2 flex items-center gap-2 rounded-[10px] px-2 py-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white">
+              {(session?.name ?? 'E').slice(0, 1).toUpperCase()}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-xs font-medium text-white/80">
+                {session?.name ?? 'Equipo'}
+              </div>
+              <div className="text-[10px] text-white/40">
+                {session?.role === 'admin' ? 'Administrador' : 'Staff'}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-[8px] px-2 py-1 text-[11px] text-white/50 hover:bg-white/10 hover:text-white"
+            >
+              Salir
+            </button>
+          </div>
           <Link
             href="/"
             className="flex items-center gap-2 rounded-[10px] px-3 py-2.5 text-sm text-white/60 hover:bg-white/[0.06] hover:text-white"

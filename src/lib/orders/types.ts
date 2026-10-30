@@ -43,6 +43,7 @@ export interface Order {
   subtotalCents: number
   discountCents: number
   totalCents: number
+  promoCode: string | null
   paymentMethod: PaymentMethod
   paymentStatus: PaymentStatus
   notes: string
@@ -64,6 +65,8 @@ export interface CreateOrderInput {
   items: CreateOrderItemInput[]
   paymentMethod?: PaymentMethod
   paymentStatus?: PaymentStatus
+  discountCents?: number
+  promoCode?: string | null
   notes?: string
 }
 

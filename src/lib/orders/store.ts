@@ -48,6 +48,7 @@ function normalizeOrder(order: Order): Order {
     customerPhone: order.customerPhone ?? '',
     notes: order.notes ?? '',
     discountCents: order.discountCents ?? 0,
+    promoCode: order.promoCode ?? null,
     ovenStartedAt: order.ovenStartedAt ?? null,
     ovenEndedAt: order.ovenEndedAt ?? null,
     readyAt: order.readyAt ?? null,
@@ -119,6 +120,7 @@ function demoOrders(): Order[] {
       subtotalCents: subtotal,
       discountCents: 0,
       totalCents: subtotal,
+      promoCode: null,
       paymentMethod: 'pending',
       paymentStatus: 'pending',
       notes: '',
@@ -203,6 +205,10 @@ export function createOrder(input: CreateOrderInput): Order {
   const orders = getOrders()
   const items = input.items.map(buildItem)
   const subtotalCents = items.reduce((sum, item) => sum + item.totalPriceCents, 0)
+  const discountCents = Math.min(
+    Math.max(input.discountCents ?? 0, 0),
+    subtotalCents,
+  )
   const maxNumber = orders.reduce(
     (max, order) => Math.max(max, order.orderNumber),
     1000,
@@ -219,8 +225,9 @@ export function createOrder(input: CreateOrderInput): Order {
     tableNumber: input.tableNumber ?? null,
     items,
     subtotalCents,
-    discountCents: 0,
-    totalCents: subtotalCents,
+    discountCents,
+    totalCents: subtotalCents - discountCents,
+    promoCode: input.promoCode ?? null,
     paymentMethod: input.paymentMethod ?? 'pending',
     paymentStatus: input.paymentStatus ?? 'pending',
     notes: input.notes?.trim() ?? '',

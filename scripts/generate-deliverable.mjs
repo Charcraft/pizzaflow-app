@@ -134,7 +134,7 @@ y el dashboard. El hub <code>/interno</code> es la única puerta entre ambos.</p
   <div><strong>2</strong>experiencias separadas</div>
   <div><strong>22</strong>tablas en base de datos</div>
   <div><strong>31</strong>políticas RLS</div>
-  <div><strong>13/13</strong>pruebas automatizadas</div>
+  <div><strong>19/19</strong>pruebas automatizadas</div>
 </div>
 <div class="note">La aplicación funciona en modo demostración con <b>localStorage</b> y también
 incluye las migraciones SQL para conectarla a Supabase cuando el proyecto esté aprovisionado.</div>
@@ -150,6 +150,9 @@ las capturas en <code>docs/evidencias/</code>.</p>
   <tr><td>PB-05</td><td>KDS FIFO con semáforo de espera y cambios de estado</td><td class="pass">Implementado</td></tr>
   <tr><td>PB-06</td><td>Cronómetro de horno con aviso a 1:30 y alarma a 2:00</td><td class="pass">Implementado</td></tr>
   <tr><td>PB-08 / PB-16</td><td>Dashboard con ventas, ticket promedio, tiempos y top de productos</td><td class="pass">Parcial (v1)</td></tr>
+  <tr><td>Cuentas</td><td>Login del equipo, sesión local y rol administrador</td><td class="pass">Implementado</td></tr>
+  <tr><td>Promociones</td><td>Códigos de descuento aplicables en el carrito</td><td class="pass">Implementado</td></tr>
+  <tr><td>WhatsApp</td><td>Pedido prellenado al WhatsApp del dueño desde web y POS</td><td class="pass">Implementado</td></tr>
   <tr><td>PB-07, PB-09, PB-10, PB-11, PB-13, PB-17</td><td>Inventario, pagos en línea, división de cuenta, avisos, roles y calificación</td><td>Fuera de alcance v0.2.0 (schema listo)</td></tr>
 </table>
 
@@ -160,6 +163,8 @@ Ambas comparten el mismo store de pedidos y, en producción, la misma base Supab
   <div class="box">SITIO PÚBLICO<br/><span class="small">Landing · Menú · Producto · Carrito · Checkout · Seguimiento</span></div>
 </div>
 <div class="arch">
+  <div class="box">LOGIN /login<br/><span class="small">Solo equipo</span></div>
+  <div class="arrow">→</div>
   <div class="box">HUB /interno<br/><span class="small">Única puerta al área operativa</span></div>
 </div>
 <div class="arch">
@@ -235,6 +240,25 @@ ${image('12-cocina-horno.png', 'Cronómetro de horno en 1:20 y 0:02')}
 por estado y top de productos.</p>
 ${image('13-dashboard.png', 'Dashboard con métricas del día')}
 
+<h3>5.6 Cuentas y acceso del equipo</h3>
+<p>El área interna está protegida por una pantalla de login. La cuenta
+administradora accede al hub, POS, KDS y dashboard; la sidebar muestra el nombre,
+el rol y el botón de salir. La sesión se guarda en el dispositivo.</p>
+${image('16-login.png', 'Acceso del equipo')}
+
+<h3>5.7 Promociones y ganchos</h3>
+<p>Tres códigos activos (<code>BIENVENIDO10</code>, <code>COMBOFLOW</code> y
+<code>FAMILIA15</code>) con mínimo de compra. El descuento se calcula en el
+carrito, se conserva al confirmar y aparece en el pedido y el dashboard.</p>
+${image('17-promos.png', 'Promociones y ganchos en la landing')}
+
+<h3>5.8 Pedido al WhatsApp del dueño</h3>
+<p>Al confirmar un pedido web o de mostrador se abre WhatsApp con el folio, los
+productos, extras, subtotal, descuento, total y método de pago. Si el navegador
+bloquea la ventana, el pedido y el POS muestran un botón de respaldo. Para envío
+100% automático se requiere WhatsApp Business API.</p>
+${image('18-whatsapp.png', 'Botón de envío del pedido por WhatsApp')}
+
 <div class="page-break"></div>
 <h2>6. Pruebas y evidencias</h2>
 <p>Se ejecutaron dos suites de humo con Playwright Core sobre Chrome, además de las
@@ -255,7 +279,7 @@ verificaciones de tipos, lint, build y schema.</p>
   ${image('15-mobile-menu.png', 'Menú a 390 px')}
 </div>
 <h3>6.4 Verificación técnica</h3>
-<p><b>TypeScript:</b> sin errores. <b>ESLint:</b> sin errores. <b>Build:</b> 17 rutas generadas.</p>
+<p><b>TypeScript:</b> sin errores. <b>ESLint:</b> sin errores. <b>Build:</b> 20 rutas generadas.</p>
 <pre>${escapeHtml(readLog('build.txt').split('\n').slice(-18).join('\n'))}</pre>
 <p class="small">Logs completos: <code>docs/evidencias/typecheck.txt</code>,
 <code>lint.txt</code>, <code>build.txt</code>, <code>test-schema.txt</code>,
@@ -264,6 +288,9 @@ verificaciones de tipos, lint, build y schema.</p>
 <h2>7. Changelog v0.2.0</h2>
 <ul>
   <li>Separación del sitio público y de la operación interna con el hub <code>/interno</code>.</li>
+  <li>Login del equipo con rol administrador y cierre de sesión.</li>
+  <li>Promociones aplicables en el carrito y descuento en el total del pedido.</li>
+  <li>Pedido enviado a WhatsApp del dueño desde web y POS.</li>
   <li>Flujo web completo: landing, menú, producto, carrito, checkout, seguimiento y mis pedidos.</li>
   <li>POS de mostrador con folio y envío a cocina.</li>
   <li>KDS con FIFO, semáforo y cronómetro de horno.</li>

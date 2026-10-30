@@ -4,9 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useCart } from '@/hooks/useCart'
+import { usePromo } from '@/hooks/usePromo'
 import { createOrder } from '@/lib/orders/store'
 import type { PaymentMethod } from '@/lib/orders/types'
+import { buildOrderWhatsAppUrl } from '@/lib/orders/whatsapp'
 import { formatMoney } from '@/lib/menu/products'
+import { getPromoDiscount } from '@/lib/promotions'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 
@@ -24,12 +27,17 @@ const PAYMENT_HINTS: Record<Exclude<PaymentMethod, 'pending'>, string> = {
 
 export default function CheckoutPage() {
   const { items, totalCents, clearCart } = useCart()
+  const { code, clearPromo } = usePromo()
   const router = useRouter()
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
   const [paymentMethod, setPaymentMethod] = useState<Exclude<PaymentMethod, 'pending'>>('cash')
   const [notes, setNotes] = useState('')
   const [error, setError] = useState('')
+
+  const promo = getPromoDiscount(code, totalCents)
+  const discountCents = promo.discountCents
+  const finalCents = totalCents - discountCents
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -55,10 +63,14 @@ export default function CheckoutPage() {
       })),
       paymentMethod,
       paymentStatus: 'pending',
+      discountCents,
+      promoCode: code,
       notes,
     })
 
     clearCart()
+    clearPromo()
+    window.open(buildOrderWhatsAppUrl(order), '_blank', 'noopener,noreferrer')
     router.push(`/order/${order.id}`)
   }
 
@@ -234,12 +246,24 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
+            {discountCents > 0 && (
+              <div className="mt-4 flex justify-between text-sm text-basil">
+                <span>Descuento ({code})</span>
+                <span className="tabular font-medium">-{formatMoney(discountCents)}</span>
+              </div>
+            )}
             <div className="mt-4 flex items-end justify-between border-t border-line pt-4">
               <span className="text-sm text-muted">Total</span>
               <span className="tabular text-2xl font-semibold text-ink">
-                {formatMoney(totalCents)}
+                {formatMoney(finalCents)}
               </span>
             </div>
+            {code && promo.error && (
+              <p className="mt-2 text-xs text-amber">{promo.error}</p>
+            )}
+            {code && discountCents > 0 && (
+              <p className="mt-2 text-xs text-basil">Código {code} aplicado.</p>
+            )}
             <Button type="submit" size="lg" className="mt-4 w-full">
               Confirmar pedido
               <Icon name="arrow-right" size={18} />

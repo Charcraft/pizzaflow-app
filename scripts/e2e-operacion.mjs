@@ -5,6 +5,13 @@ import path from 'node:path'
 const BASE = process.env.BASE_URL || 'http://localhost:3002'
 const OUT = path.resolve(process.cwd(), '..', 'docs', 'evidencias')
 const CHROME = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  console.error('Configura ADMIN_EMAIL y ADMIN_PASSWORD en app/.env.local')
+  process.exit(2)
+}
 
 fs.mkdirSync(OUT, { recursive: true })
 
@@ -17,10 +24,20 @@ function check(name, ok, detail = '') {
 const browser = await chromium.launch({ executablePath: CHROME, headless: true })
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } })
 const page = await context.newPage()
+context.on('page', (popup) => {
+  if (popup !== page) popup.close().catch(() => {})
+})
 const errors = []
 page.on('pageerror', (error) => errors.push(String(error)))
 
 try {
+  await page.goto(`${BASE}/login`, { waitUntil: 'networkidle' })
+  await page.locator('#login-email').fill(ADMIN_EMAIL)
+  await page.locator('#login-password').fill(ADMIN_PASSWORD)
+  await page.getByRole('button', { name: 'Entrar al panel' }).click()
+  await page.waitForURL(/\/interno/, { timeout: 15000 })
+  check('login del equipo', await page.getByText('Centro de operaciones').isVisible())
+
   await page.goto(`${BASE}/interno/mostrador`, { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: 'Agregar' }).first().click()
   await page.getByRole('button', { name: 'Agregar' }).nth(1).click()
@@ -28,7 +45,12 @@ try {
   await page.getByText('Pedido enviado a cocina').waitFor({ timeout: 10000 })
   const folioText = await page.getByRole('dialog').locator('p.tabular').textContent()
   check('mostrador crea pedido', /#\d+/.test(folioText || ''), folioText || '')
-  await page.screenshot({ path: path.join(OUT, '10-mostrador-pedido.png'), fullPage: true })
+  const whatsapp = page.getByRole('link', { name: 'Abrir WhatsApp' })
+  check(
+    'whatsapp del dueno desde POS',
+    (await whatsapp.getAttribute('href'))?.includes('wa.me/529611900363') ?? false,
+  )
+  await page.screenshot({ path: path.join(OUT, '10-pos-ticket.png'), fullPage: true })
   await page.getByRole('button', { name: 'Cerrar' }).click()
 
   await page.goto(`${BASE}/interno/cocina`, { waitUntil: 'networkidle' })

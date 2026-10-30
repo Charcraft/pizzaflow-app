@@ -1,14 +1,37 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import { useCart } from '@/hooks/useCart'
+import { usePromo } from '@/hooks/usePromo'
 import { formatMoney } from '@/lib/menu/products'
+import { getPromoDiscount } from '@/lib/promotions'
 import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { PizzaArt } from '@/components/public/PizzaArt'
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, totalCents, totalItems, clearCart } = useCart()
+  const { code, applyCode, clearPromo } = usePromo()
+  const [promoInput, setPromoInput] = useState('')
+  const [promoError, setPromoError] = useState('')
+
+  const promo = getPromoDiscount(code, totalCents)
+  const finalCents = totalCents - promo.discountCents
+
+  const handleApplyPromo = () => {
+    if (applyCode(promoInput)) {
+      setPromoError('')
+      setPromoInput('')
+    } else {
+      setPromoError('Código no válido.')
+    }
+  }
+
+  const handleClearCart = () => {
+    clearCart()
+    clearPromo()
+  }
 
   if (!items.length) {
     return (
@@ -46,7 +69,7 @@ export default function CartPage() {
         </div>
         <button
           type="button"
-          onClick={clearCart}
+          onClick={handleClearCart}
           className="text-xs text-muted underline-offset-4 hover:text-tomato hover:underline"
         >
           Vaciar carrito
@@ -129,15 +152,74 @@ export default function CartPage() {
                 <dt className="text-muted">Subtotal</dt>
                 <dd className="tabular font-medium">{formatMoney(totalCents)}</dd>
               </div>
+              {promo.discountCents > 0 && (
+                <div className="flex justify-between text-basil">
+                  <dt>Descuento ({code})</dt>
+                  <dd className="tabular font-medium">-{formatMoney(promo.discountCents)}</dd>
+                </div>
+              )}
               <div className="flex justify-between">
                 <dt className="text-muted">Envío</dt>
                 <dd className="text-muted">No aplica</dd>
               </div>
             </dl>
+
+            <div className="mt-4 border-t border-line pt-4">
+              <label
+                className="mb-1.5 block text-xs font-medium text-muted"
+                htmlFor="promo-code"
+              >
+                Código promocional
+              </label>
+              {code ? (
+                <div className="flex items-center justify-between gap-2 rounded-[10px] border border-basil/30 bg-basil/5 px-3 py-2">
+                  <span className="text-sm font-medium text-basil">{code}</span>
+                  <button
+                    type="button"
+                    onClick={clearPromo}
+                    className="text-xs text-muted underline-offset-4 hover:text-tomato hover:underline"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    id="promo-code"
+                    type="text"
+                    value={promoInput}
+                    onChange={(event) => setPromoInput(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault()
+                        handleApplyPromo()
+                      }
+                    }}
+                    placeholder="BIENVENIDO10"
+                    className="h-10 min-w-0 flex-1 rounded-[9px] border border-line bg-cream px-3 text-sm uppercase focus:border-tomato focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyPromo}
+                    className="h-10 shrink-0 rounded-[9px] border border-line px-3 text-xs font-medium text-ink hover:bg-cream"
+                  >
+                    Aplicar
+                  </button>
+                </div>
+              )}
+              {promoError && <p className="mt-2 text-xs text-tomato">{promoError}</p>}
+              {code && promo.error && <p className="mt-2 text-xs text-amber">{promo.error}</p>}
+              {code && promo.discountCents > 0 && (
+                <p className="mt-2 text-xs text-basil">
+                  Ahorras {formatMoney(promo.discountCents)} con este código.
+                </p>
+              )}
+            </div>
+
             <div className="mt-4 flex items-end justify-between border-t border-line pt-4">
               <span className="text-sm text-muted">Total</span>
               <span className="tabular text-2xl font-semibold text-ink">
-                {formatMoney(totalCents)}
+                {formatMoney(finalCents)}
               </span>
             </div>
             <ButtonLink href="/checkout" size="lg" className="mt-4 w-full">

@@ -3,6 +3,7 @@ import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { PizzaArt } from '@/components/public/PizzaArt'
 import { DEMO_PRODUCTS, formatMoney } from '@/lib/menu/products'
+import { PROMOTIONS } from '@/lib/promotions'
 
 const STEPS = [
   {
@@ -45,6 +46,21 @@ export default function HomePage() {
 
   return (
     <main>
+      <div className="border-b border-line bg-night text-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-2.5 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <p>
+            <span className="font-semibold text-[#FDBA74]">Hoy:</span> 10% en tu primer
+            pedido con{' '}
+            <span className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[11px]">
+              BIENVENIDO10
+            </span>
+          </p>
+          <a href="#promos" className="text-white/60 hover:text-white">
+            Ver promociones →
+          </a>
+        </div>
+      </div>
+
       <section className="mx-auto max-w-6xl px-5 pb-14 pt-10 sm:px-8 sm:pb-20 sm:pt-16">
         <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
@@ -104,6 +120,42 @@ export default function HomePage() {
               <div className="text-lg font-semibold text-ink">15-25 min</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="promos" className="mx-auto max-w-6xl px-5 pb-14 sm:px-8 sm:pb-20">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-tomato">
+              Promociones
+            </p>
+            <h2 className="mt-2 font-display text-3xl tracking-tight text-ink sm:text-4xl">
+              Ganchos para pedir hoy.
+            </h2>
+          </div>
+          <p className="max-w-sm text-sm text-muted">
+            Aplica el código en el carrito. Sin letras chiquitas: el descuento se ve
+            antes de pagar.
+          </p>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {PROMOTIONS.map((promo) => (
+            <div key={promo.code} className="flex flex-col rounded-panel border border-line bg-paper p-5 shadow-soft">
+              <span className="w-fit rounded-full bg-tomato/10 px-2.5 py-1 text-[11px] font-medium text-tomato">
+                {promo.badge}
+              </span>
+              <h3 className="mt-4 text-lg font-semibold">{promo.title}</h3>
+              <p className="mt-1 flex-1 text-sm leading-6 text-muted">{promo.description}</p>
+              <div className="mt-5 flex items-center justify-between gap-3">
+                <span className="rounded-[8px] border border-dashed border-line px-3 py-1.5 font-mono text-xs font-semibold">
+                  {promo.code}
+                </span>
+                <Link href="/menu" className="text-sm font-medium text-tomato hover:underline">
+                  Pedir ahora →
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

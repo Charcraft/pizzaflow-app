@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useOrders } from '@/hooks/useOrders'
 import { formatMoney } from '@/lib/menu/products'
 import { SOURCE_LABELS, STATUS_LABELS, type OrderStatus } from '@/lib/orders/types'
+import { buildOrderWhatsAppUrl } from '@/lib/orders/whatsapp'
 import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 
@@ -168,6 +169,14 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
                 </div>
               ))}
             </div>
+            {order.discountCents > 0 && (
+              <div className="mt-3 flex justify-between text-sm text-basil">
+                <span>
+                  Descuento {order.promoCode ? `(${order.promoCode})` : ''}
+                </span>
+                <span className="tabular">-{formatMoney(order.discountCents)}</span>
+              </div>
+            )}
             <div className="mt-4 flex justify-between border-t border-line pt-4 text-base font-semibold">
               <span>Total</span>
               <span className="tabular">{formatMoney(order.totalCents)}</span>
@@ -211,6 +220,23 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
           </ButtonLink>
         </div>
       </div>
+
+      <a
+        href={buildOrderWhatsAppUrl(order)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3 flex items-center justify-between gap-3 rounded-card border border-basil/30 bg-basil/5 p-4 transition-colors hover:bg-basil/10"
+      >
+        <div>
+          <p className="text-sm font-medium text-basil">Enviar pedido por WhatsApp</p>
+          <p className="text-xs text-muted">
+            Abre el chat del dueño con el folio, los productos y el total.
+          </p>
+        </div>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-basil text-white">
+          <Icon name="phone" size={16} />
+        </span>
+      </a>
     </main>
   )
 }

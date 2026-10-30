@@ -72,7 +72,7 @@ export function PublicFooter() {
           <span>© 2026 PizzaFlow. Hecho para una pizzería pequeña.</span>
           <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span>Precios en MXN · Pago al recoger</span>
-            <Link href="/interno" className="font-medium text-ink/60 hover:text-tomato">
+            <Link href="/login?next=/interno" className="font-medium text-ink/60 hover:text-tomato">
               Acceso equipo
             </Link>
           </span>

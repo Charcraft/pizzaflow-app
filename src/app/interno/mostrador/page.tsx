@@ -7,6 +7,7 @@ import { useCart } from '@/hooks/useCart'
 import { DEMO_PRODUCTS, formatMoney } from '@/lib/menu/products'
 import { createOrder } from '@/lib/orders/store'
 import type { CreateOrderInput } from '@/lib/orders/types'
+import { buildOrderWhatsAppUrl } from '@/lib/orders/whatsapp'
 
 const CATEGORY_LABEL: Record<string, string> = {
   all: 'Todo',
@@ -23,6 +24,7 @@ export default function MostradorPage() {
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'transfer'>('cash')
   const [showSuccess, setShowSuccess] = useState(false)
   const [lastOrderNumber, setLastOrderNumber] = useState<number | null>(null)
+  const [lastWhatsAppUrl, setLastWhatsAppUrl] = useState('')
 
   const { items, addItem, updateQuantity, removeItem, totalCents, totalItems, clearCart } =
     useCart()
@@ -69,9 +71,12 @@ export default function MostradorPage() {
     }
 
     const order = createOrder(input)
+    const whatsappUrl = buildOrderWhatsAppUrl(order)
     setLastOrderNumber(order.orderNumber)
+    setLastWhatsAppUrl(whatsappUrl)
     setShowSuccess(true)
     clearCart()
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
     setTimeout(() => setShowSuccess(false), 5000)
   }
 
@@ -307,13 +312,24 @@ export default function MostradorPage() {
               #{lastOrderNumber}
             </p>
             <p className="mt-2 text-sm text-muted">
-              La comanda ya está en el KDS. Dile al cliente que espere su folio.
+              La comanda ya está en el KDS. Abrimos WhatsApp con el resumen para Leito;
+              si no se abrió, usa el botón.
             </p>
+            {lastWhatsAppUrl && (
+              <a
+                href={lastWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-[10px] bg-basil text-sm font-medium text-white hover:opacity-90"
+              >
+                Abrir WhatsApp
+              </a>
+            )}
             <Button
               type="button"
               onClick={() => setShowSuccess(false)}
               variant="secondary"
-              className="mt-5 w-full"
+              className="mt-2 w-full"
             >
               Cerrar
             </Button>
