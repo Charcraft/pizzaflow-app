@@ -98,7 +98,7 @@ export function InternalShell({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <nav
-            className="flex gap-1 overflow-x-auto px-3 pb-2"
+            className="flex w-full gap-1 overflow-x-auto px-3 pb-2"
             aria-label="Navegación interna móvil"
           >
             {NAV.map((item) => {

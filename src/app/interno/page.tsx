@@ -122,7 +122,7 @@ export default function InternalHomePage() {
         </div>
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-          <section className="rounded-panel border border-line bg-paper p-5 shadow-soft">
+          <section className="min-w-0 rounded-panel border border-line bg-paper p-5 shadow-soft">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Últimos pedidos</h2>
               <Link href="/interno/dashboard" className="text-xs text-muted hover:text-ink">
@@ -134,9 +134,9 @@ export default function InternalHomePage() {
                 Aún no hay pedidos. Abre el POS o comparte el menú con tus clientes.
               </div>
             ) : (
-              <ul className="mt-4 divide-y divide-line">
+              <ul className="mt-4 min-w-0 divide-y divide-line">
                 {recent.map((order) => (
-                  <li key={order.id} className="flex items-center gap-3 py-3">
+                  <li key={order.id} className="flex min-w-0 items-center gap-3 py-3">
                     <span className="tabular flex h-8 w-12 items-center justify-center rounded-[8px] bg-cream text-xs font-semibold">
                       #{order.orderNumber}
                     </span>
@@ -146,10 +146,10 @@ export default function InternalHomePage() {
                         {SOURCE_LABELS[order.source]} · {order.items.length} partidas
                       </div>
                     </div>
-                    <span className="rounded-full bg-cream px-2 py-1 text-[11px] font-medium text-muted">
+                    <span className="rounded-full bg-cream px-2 py-1 text-[11px] font-medium text-muted shrink-0">
                       {STATUS_LABELS[order.status]}
                     </span>
-                    <span className="tabular w-20 text-right text-sm font-medium">
+                    <span className="tabular w-20 shrink-0 text-right text-sm font-medium">
                       {formatMoney(order.totalCents)}
                     </span>
                   </li>
@@ -158,7 +158,7 @@ export default function InternalHomePage() {
             )}
           </section>
 
-          <aside className="rounded-panel border border-line bg-night p-5 text-white shadow-soft">
+          <aside className="min-w-0 rounded-panel border border-line bg-night p-5 text-white shadow-soft">
             <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
               <span className="h-1.5 w-1.5 rounded-full bg-basil" />
               Resumen del turno
