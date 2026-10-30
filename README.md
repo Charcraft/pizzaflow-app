@@ -11,7 +11,12 @@ Sistema integral para una pizzería pequeña con venta en mostrador y pedidos we
 - 253580 Alarcón Valencia Carlos Adrián – Desarrollo Fullstack  
 
 **Despliegue:** https://pizzaflow-app-charcraftycarlos-3119s-projects.vercel.app  
-**Repositorio privado:** https://github.com/Charcraft/pizzaflow-app-private
+**Repositorio privado:** https://github.com/Charcraft/pizzaflow-app-private  
+
+**Cuenta admin demo:**  
+Email: pinedadeidad@67.com  
+Rol: admin  
+*Solo para pruebas locales. En producción usar Supabase Auth.*
 
 ## Módulos
 
