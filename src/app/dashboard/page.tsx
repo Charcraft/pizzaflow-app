@@ -5,10 +5,17 @@ import { getMetrics } from '@/lib/orders/store'
 import { formatMoney } from '@/lib/menu/products'
 import { STATUS_LABELS, type OrderStatus } from '@/lib/orders/types'
 
+function formatIsoTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString('es-MX', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
 export default function DashboardPage() {
   const orders = useOrders()
   const metrics = getMetrics(orders)
-  const lastUpdate = orders[0] ? new Date(orders[0].updatedAt) : null
+  const lastUpdate = orders[0] ? formatIsoTime(orders[0].updatedAt) : null
 
   const cards = [
     { label: 'Pedidos hoy', value: metrics.totalOrders.toString(), color: 'bg-blue-600' },
@@ -26,7 +33,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900">Dashboard Dueño</h1>
           <div className="text-xs text-gray-500">
             {lastUpdate
-              ? `Último pedido: ${lastUpdate.toLocaleTimeString('es-MX')}`
+              ? `Último pedido: ${lastUpdate}`
               : 'Sin pedidos registrados'}
           </div>
         </div>
