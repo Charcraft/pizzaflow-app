@@ -1,58 +1,67 @@
 import { ProductCard } from '@/components/ProductCard'
+import { getProducts } from '@/lib/supabase/queries'
 
-// Mock data - will be replaced with Supabase query
-const mockProducts = [
-  {
-    id: '1',
-    name: 'Pizza Margarita',
-    description: 'Salsa de tomate, mozzarella fresca y albahaca',
-    base_price_cents: 8500,
-    image_url: null,
-    category: 'pizza'
-  },
-  {
-    id: '2',
-    name: 'Pizza Pepperoni',
-    description: 'Salsa de tomate, mozzarella y pepperoni',
-    base_price_cents: 9500,
-    image_url: null,
-    category: 'pizza'
-  },
-  {
-    id: '3',
-    name: 'Pizza Hawaiana',
-    description: 'Salsa de tomate, mozzarella, jamón y piña',
-    base_price_cents: 9500,
-    image_url: null,
-    category: 'pizza'
-  },
-  {
-    id: '4',
-    name: 'Pizza Cuatro Quesos',
-    description: 'Mozzarella, parmesano, gorgonzola y provolone',
-    base_price_cents: 10500,
-    image_url: null,
-    category: 'pizza'
-  },
-  {
-    id: '5',
-    name: 'Refresco 600ml',
-    description: 'Coca Cola, Sprite o Fanta',
-    base_price_cents: 2500,
-    image_url: null,
-    category: 'bebida'
-  },
-  {
-    id: '6',
-    name: 'Agua 500ml',
-    description: 'Agua mineral',
-    base_price_cents: 1500,
-    image_url: null,
-    category: 'bebida'
+export async function generateMetadata() {
+  return {
+    title: 'Menú - PizzaFlow',
+    description: 'Pizzas artesanales, bebidas y extras'
   }
-]
+}
 
-export default function MenuPage() {
+export default async function MenuPage() {
+  // TODO: Reemplazar con query real cuando Supabase esté configurado
+  // const products = await getProducts()
+  
+  const mockProducts = [
+    {
+      id: '1',
+      name: 'Pizza Margarita',
+      description: 'Salsa de tomate, mozzarella fresca y albahaca',
+      base_price_cents: 8500,
+      image_url: null,
+      category: 'pizza'
+    },
+    {
+      id: '2',
+      name: 'Pizza Pepperoni',
+      description: 'Salsa de tomate, mozzarella y pepperoni',
+      base_price_cents: 9500,
+      image_url: null,
+      category: 'pizza'
+    },
+    {
+      id: '3',
+      name: 'Pizza Hawaiana',
+      description: 'Salsa de tomate, mozzarella, jamón y piña',
+      base_price_cents: 9500,
+      image_url: null,
+      category: 'pizza'
+    },
+    {
+      id: '4',
+      name: 'Pizza Cuatro Quesos',
+      description: 'Mozzarella, parmesano, gorgonzola y provolone',
+      base_price_cents: 10500,
+      image_url: null,
+      category: 'pizza'
+    },
+    {
+      id: '5',
+      name: 'Refresco 600ml',
+      description: 'Coca Cola, Sprite o Fanta',
+      base_price_cents: 2500,
+      image_url: null,
+      category: 'bebida'
+    },
+    {
+      id: '6',
+      name: 'Agua 500ml',
+      description: 'Agua mineral',
+      base_price_cents: 1500,
+      image_url: null,
+      category: 'bebida'
+    }
+  ]
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">

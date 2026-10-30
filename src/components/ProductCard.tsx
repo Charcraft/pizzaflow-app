@@ -10,15 +10,24 @@ interface ProductCardProps {
   basePriceCents: number
   imageUrl: string | null
   category: string
+  variants?: Array<{
+    id: string
+    name: string
+    price_modifier_cents: number
+  }>
 }
 
-export function ProductCard({ id, name, description, basePriceCents, imageUrl, category }: ProductCardProps) {
+export function ProductCard({ id, name, description, basePriceCents, imageUrl, category, variants }: ProductCardProps) {
   const [added, setAdded] = useState(false)
+  const [selectedVariant, setSelectedVariant] = useState<string>(variants?.[1]?.id || variants?.[0]?.id || '')
+  
+  const variant = variants?.find(v => v.id === selectedVariant)
+  const finalPriceCents = basePriceCents + (variant?.price_modifier_cents || 0)
   
   const price = new Intl.NumberFormat('es-MX', {
     style: 'currency',
     currency: 'MXN'
-  }).format(basePriceCents / 100)
+  }).format(finalPriceCents / 100)
 
   const handleAdd = () => {
     setAdded(true)
@@ -43,6 +52,26 @@ export function ProductCard({ id, name, description, basePriceCents, imageUrl, c
         <h3 className="font-semibold text-gray-900">{name}</h3>
         {description && (
           <p className="text-sm text-gray-600 mt-1 line-clamp-2">{description}</p>
+        )}
+        {variants && variants.length > 0 && (
+          <div className="mt-3">
+            <label className="block text-xs text-gray-600 mb-1">Tamaño</label>
+            <select
+              value={selectedVariant}
+              onChange={(e) => setSelectedVariant(e.target.value)}
+              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            >
+              {variants.map(v => {
+                const vPrice = basePriceCents + v.price_modifier_cents
+                const vPriceFmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(vPrice / 100)
+                return (
+                  <option key={v.id} value={v.id}>
+                    {v.name} - {vPriceFmt}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
         )}
         <div className="flex items-center justify-between mt-3">
           <span className="text-lg font-bold text-red-600">{price}</span>
