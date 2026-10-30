@@ -2,7 +2,16 @@
 
 Sistema integral para una pizzería pequeña con venta en mostrador y pedidos web para recoger en local (sin delivery).
 
-**Equipo:** Grupo 4-C · UPChiapas · Análisis y Diseño de Software · 2026
+**Equipo:** Grupo 4-C · UPChiapas · Análisis y Diseño de Software · 2026  
+**Docente:** Rocío Crystal Hernández Camacho  
+**Integrantes:**  
+- 253390 González Pérez Santos Enoch – Scrum Master  
+- 253425 Nucamendi Ruiz Leonardo – Product Owner  
+- 253432 Martínez Pineda Carlos de Jesús – Desarrollo Fullstack  
+- 253580 Alarcón Valencia Carlos Adrián – Desarrollo Fullstack  
+
+**Despliegue:** https://pizzaflow-app-charcraftycarlos-3119s-projects.vercel.app  
+**Repositorio privado:** https://github.com/Charcraft/pizzaflow-app-private
 
 ## Módulos
 
