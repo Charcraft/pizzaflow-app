@@ -1,9 +1,8 @@
-import Link from 'next/link'
 import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { PizzaArt } from '@/components/public/PizzaArt'
-import { DEMO_PRODUCTS, formatMoney } from '@/lib/menu/products'
-import { PROMOTIONS } from '@/lib/promotions'
+import { PromoCarousel } from '@/components/public/PromoCarousel'
+import { FeaturedCarousel } from '@/components/public/FeaturedCarousel'
 
 const STEPS = [
   {
@@ -42,13 +41,11 @@ const BENEFITS = [
 ]
 
 export default function HomePage() {
-  const featured = [DEMO_PRODUCTS[0], DEMO_PRODUCTS[1], DEMO_PRODUCTS[3]]
-
   return (
     <main>
       <div className="border-b border-line bg-night text-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-2.5 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <p>
+          <p className="sm:truncate">
             <span className="font-semibold text-[#FDBA74]">Hoy:</span> 10% en tu primer
             pedido con{' '}
             <span className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[11px]">
@@ -124,39 +121,20 @@ export default function HomePage() {
       </section>
 
       <section id="promos" className="mx-auto max-w-6xl px-5 pb-14 sm:px-8 sm:pb-20">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-tomato">
               Promociones
             </p>
             <h2 className="mt-2 font-display text-3xl tracking-tight text-ink sm:text-4xl">
-              Ganchos para pedir hoy.
+              Ofertas que se antojan.
             </h2>
           </div>
           <p className="max-w-sm text-sm text-muted">
-            Aplica el código en el carrito. Sin letras chiquitas: el descuento se ve
-            antes de pagar.
+            Aplica el código en el carrito. El descuento se ve antes de pagar.
           </p>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {PROMOTIONS.map((promo) => (
-            <div key={promo.code} className="flex flex-col rounded-panel border border-line bg-paper p-5 shadow-soft">
-              <span className="w-fit rounded-full bg-tomato/10 px-2.5 py-1 text-[11px] font-medium text-tomato">
-                {promo.badge}
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">{promo.title}</h3>
-              <p className="mt-1 flex-1 text-sm leading-6 text-muted">{promo.description}</p>
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <span className="rounded-[8px] border border-dashed border-line px-3 py-1.5 font-mono text-xs font-semibold">
-                  {promo.code}
-                </span>
-                <Link href="/menu" className="text-sm font-medium text-tomato hover:underline">
-                  Pedir ahora →
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+        <PromoCarousel />
       </section>
 
       <section id="como-funciona" className="border-y border-line bg-paper">
@@ -187,7 +165,7 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-tomato">
               Favoritas de la casa
@@ -196,40 +174,11 @@ export default function HomePage() {
               Las que siempre se piden.
             </h2>
           </div>
-          <Link href="/menu" className="text-sm font-medium text-tomato hover:underline">
+          <a href="/menu" className="text-sm font-medium text-tomato hover:underline">
             Ver menú completo →
-          </Link>
+          </a>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {featured.map((product) => (
-            <Link
-              key={product.id}
-              href={`/product/${product.id}`}
-              className="group rounded-panel border border-line bg-paper p-5 shadow-soft transition-transform duration-200 hover:-translate-y-0.5"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-tomato/10 text-tomato">
-                  <Icon name="pizza" size={22} />
-                </span>
-                <span className="rounded-full bg-cream px-2.5 py-1 text-[11px] font-medium text-muted">
-                  Pizza
-                </span>
-              </div>
-              <h3 className="mt-4 text-lg font-semibold">{product.name}</h3>
-              <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted">
-                {product.description}
-              </p>
-              <div className="mt-5 flex items-center justify-between">
-                <span className="tabular text-sm font-semibold">
-                  Desde {formatMoney(product.basePriceCents)}
-                </span>
-                <span className="text-sm font-medium text-tomato group-hover:underline">
-                  Personalizar
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <FeaturedCarousel />
       </section>
 
       <section className="bg-night text-white">

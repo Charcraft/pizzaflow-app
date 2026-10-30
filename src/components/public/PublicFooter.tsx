@@ -5,7 +5,7 @@ import { LogoMark } from '@/components/ui/LogoMark'
 export function PublicFooter() {
   return (
     <footer className="border-t border-line bg-paper">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-2.5">
             <LogoMark />
@@ -58,6 +58,11 @@ export function PublicFooter() {
             <li>
               <Link href="/pedido" className="text-ink hover:text-tomato">
                 Mis pedidos
+              </Link>
+            </li>
+            <li>
+              <Link href="/cuenta" className="text-ink hover:text-tomato">
+                Mi cuenta
               </Link>
             </li>
             <li className="flex items-center gap-2 pt-2 text-muted">
