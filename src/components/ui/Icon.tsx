@@ -19,6 +19,7 @@ export type IconName =
   | 'phone'
   | 'map-pin'
   | 'users'
+  | 'user-plus'
   | 'spark'
 
 const PATHS: Record<IconName, React.ReactNode> = {
@@ -108,6 +109,13 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <circle cx="9" cy="8" r="3" />
       <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
       <path d="M16 5a3 3 0 0 1 0 6M18 20c0-2.2-.8-4.2-2-5.6" />
+    </>
+  ),
+  'user-plus': (
+    <>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
+      <path d="M16 5v6M13 8h6" />
     </>
   ),
   spark: (

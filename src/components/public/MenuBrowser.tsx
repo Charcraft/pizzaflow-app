@@ -8,8 +8,6 @@ import { DEMO_PRODUCTS } from '@/lib/menu/products'
 const CATEGORIES = [
   { key: 'all', label: 'Todo' },
   { key: 'pizza', label: 'Pizzas' },
-  { key: 'bebida', label: 'Bebidas' },
-  { key: 'extra', label: 'Extras' },
 ] as const
 
 type Category = (typeof CATEGORIES)[number]['key']

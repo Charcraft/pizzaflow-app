@@ -117,10 +117,28 @@ export function PublicHeader() {
               {link.label}
             </Link>
           ))}
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <Link
+              href="/entrar"
+              onClick={() => setOpen(false)}
+              className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
+            >
+              <Icon name="users" size={17} />
+              Entrar
+            </Link>
+            <Link
+              href="/registro"
+              onClick={() => setOpen(false)}
+              className="flex h-14 items-center justify-center gap-2 rounded-[12px] border border-line bg-paper text-[15px] font-medium text-ink hover:bg-cream"
+            >
+              <Icon name="user-plus" size={17} />
+              Crear cuenta
+            </Link>
+          </div>
           <Link
             href="/menu"
             onClick={() => setOpen(false)}
-            className="mt-4 flex h-14 items-center justify-center gap-2.5 rounded-[12px] bg-tomato text-[15px] font-semibold text-white shadow-sm"
+            className="mt-2 flex h-14 items-center justify-center gap-2.5 rounded-[12px] bg-tomato text-[15px] font-semibold text-white shadow-sm"
           >
             Pedir ahora
             <Icon name="arrow-right" size={16} />

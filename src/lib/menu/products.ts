@@ -16,7 +16,7 @@ export interface DemoProduct {
   name: string
   description: string
   basePriceCents: number
-  category: 'pizza' | 'bebida' | 'extra'
+  category: 'pizza'
   imageUrl: string | null
   variants: DemoVariant[]
   ingredients: DemoIngredient[]
@@ -87,51 +87,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     artVariant: 3,
     badge: 'Cuatro quesos',
   },
-  {
-    id: '5',
-    name: 'Refresco 600ml',
-    description: 'Coca Cola, Sprite o Fanta',
-    basePriceCents: 2500,
-    category: 'bebida',
-    imageUrl: null,
-    variants: [],
-    ingredients: [],
-    badge: 'Fría',
-  },
-  {
-    id: '6',
-    name: 'Agua 500ml',
-    description: 'Agua mineral',
-    basePriceCents: 1500,
-    category: 'bebida',
-    imageUrl: null,
-    variants: [],
-    ingredients: [],
-    badge: 'Fría',
-  },
-  {
-    id: '7',
-    name: 'Alitas 6 piezas',
-    description: 'Alitas BBQ con aderezo',
-    basePriceCents: 7500,
-    category: 'extra',
-    imageUrl: null,
-    variants: [],
-    ingredients: [],
-    badge: 'Para compartir',
-  },
-  {
-    id: '8',
-    name: 'Borde de Queso',
-    description: 'Borde rebozado con queso',
-    basePriceCents: 2000,
-    category: 'extra',
-    imageUrl: null,
-    variants: [],
-    ingredients: [],
-    badge: 'Extra',
-  },
-]
+  ]
 
 export function getDemoProduct(id: string): DemoProduct | undefined {
   return DEMO_PRODUCTS.find((product) => product.id === id)
