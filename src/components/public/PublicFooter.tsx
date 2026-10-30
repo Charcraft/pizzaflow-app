@@ -70,7 +70,12 @@ export function PublicFooter() {
       <div className="border-t border-line/80">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-xs text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <span>© 2026 PizzaFlow. Hecho para una pizzería pequeña.</span>
-          <span>Precios en MXN · Pago al recoger</span>
+          <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>Precios en MXN · Pago al recoger</span>
+            <Link href="/interno" className="font-medium text-ink/60 hover:text-tomato">
+              Acceso equipo
+            </Link>
+          </span>
         </div>
       </div>
     </footer>
