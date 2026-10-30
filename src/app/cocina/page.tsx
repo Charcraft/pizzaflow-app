@@ -1,42 +1,70 @@
+'use client'
+
+import { useOrders } from '@/hooks/useOrders'
+import { OrderCard } from '@/components/orders/OrderCard'
+import { updateOrderStatus } from '@/lib/orders/store'
+import { ACTIVE_STATUSES } from '@/lib/orders/types'
+
 export default function CocinaPage() {
+  const orders = useOrders()
+
+  const activeOrders = orders
+    .filter(o => ACTIVE_STATUSES.includes(o.status))
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+
+  const handleUpdateStatus = (id: string, status: 'pending' | 'confirmed' | 'preparing' | 'in_oven' | 'ready' | 'completed' | 'cancelled') => {
+    updateOrderStatus(id, status)
+  }
+
+  const counts = {
+    nuevos: activeOrders.filter(o => o.status === 'pending' || o.status === 'confirmed').length,
+    preparando: activeOrders.filter(o => o.status === 'preparing').length,
+    horno: activeOrders.filter(o => o.status === 'in_oven').length,
+    listo: activeOrders.filter(o => o.status === 'ready').length,
+  }
+
+
+
   return (
-    <main className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-8">
-      <div className="max-w-4xl w-full">
-        <div className="bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-700">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="text-5xl">👨‍🍳</div>
-            <div>
-              <h1 className="text-3xl font-bold text-white">KDS COCINA</h1>
-              <p className="text-gray-400">Kitchen Display System</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-red-600/20 border border-red-500/50 rounded-xl p-4">
-              <div className="text-2xl font-bold text-red-400">0</div>
-              <div className="text-sm text-gray-400">Nuevos</div>
-            </div>
-            <div className="bg-yellow-600/20 border border-yellow-500/50 rounded-xl p-4">
-              <div className="text-2xl font-bold text-yellow-400">0</div>
-              <div className="text-sm text-gray-400">Preparando</div>
-            </div>
-            <div className="bg-green-600/20 border border-green-500/50 rounded-xl p-4">
-              <div className="text-2xl font-bold text-green-400">0</div>
-              <div className="text-sm text-gray-400">Listos</div>
-            </div>
-          </div>
-
-          <div className="text-center py-12 border-2 border-dashed border-gray-700 rounded-xl">
-            <p className="text-gray-500 mb-2">Sin pedidos pendientes</p>
-            <p className="text-xs text-gray-600">
-              Estado: ✅ Estructura creada • ⏳ Desarrollo pendiente (PB-05, PB-06)
-            </p>
-          </div>
-
-          <div className="mt-6 text-xs text-gray-500 text-center">
-            Realtime Supabase conectado • FIFO • Semáforo de espera • Cronómetro horno
-          </div>
+    <main className="min-h-screen bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">KDS Cocina</h1>
+          <div className="text-sm text-gray-400">PB-04 / PB-05 / PB-06</div>
         </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: 'Nuevos', value: counts.nuevos, color: 'bg-blue-600' },
+            { label: 'Preparando', value: counts.preparando, color: 'bg-yellow-600' },
+            { label: 'En horno', value: counts.horno, color: 'bg-orange-600' },
+            { label: 'Listos', value: counts.listo, color: 'bg-green-600' },
+          ].map(card => (
+            <div key={card.label} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+              <div className={`text-3xl font-bold ${card.color} w-12 h-12 rounded-lg flex items-center justify-center mb-2`}>
+                {card.value}
+              </div>
+              <div className="text-sm text-gray-400">{card.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {activeOrders.map(order => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              onUpdateStatus={handleUpdateStatus}
+            />
+          ))}
+        </div>
+
+        {activeOrders.length === 0 && (
+          <div className="text-center py-20 text-gray-500">
+            <div className="text-6xl mb-4">🍕</div>
+            <p>Sin pedidos pendientes</p>
+          </div>
+        )}
       </div>
     </main>
   )
