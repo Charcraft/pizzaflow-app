@@ -3,7 +3,9 @@ import { MenuBrowser } from '@/components/public/MenuBrowser'
 import { Icon } from '@/components/ui/Icon'
 
 export const metadata = {
-  title: 'Menú',
+  title: 'Menú — Pizzas artesanales y bebidas',
+  description:
+    'Explora nuestro menú de pizzas artesanales con tamaño personalizable, mitad/mitad y extras. Precios claros, recogida en mostrador en 15-25 min.',
 }
 
 export default function MenuPage() {

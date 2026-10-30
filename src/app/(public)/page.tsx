@@ -4,6 +4,18 @@ import { PizzaArt } from '@/components/public/PizzaArt'
 import { PromoCarousel } from '@/components/public/PromoCarousel'
 import { FeaturedCarousel } from '@/components/public/FeaturedCarousel'
 
+export const metadata = {
+  title: 'PizzaFlow — Pizzería de barrio en Tuxtla',
+  description:
+    'Pide pizza artesanal en línea y recógela en mostrador. Personalización instantánea, horno monitoreado y seguimiento en tiempo real. 15-25 min.',
+  openGraph: {
+    title: 'PizzaFlow — Pizza artesanal con recogida en mostrador',
+    description:
+      'Menú corto, precio claro y cocina en tiempo real. Pide ahora y pasa a recoger.',
+    url: '/',
+  },
+}
+
 const STEPS = [
   {
     icon: 'pizza' as const,
@@ -219,6 +231,38 @@ export default function HomePage() {
           </ButtonLink>
         </div>
       </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Restaurant',
+            name: 'PizzaFlow',
+            description:
+              'Pizzería de barrio con pedido en línea y recogida en mostrador. Pizzas artesanales, personalización al instante.',
+            url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+            servesCuisine: 'Pizza',
+            priceRange: '$$',
+            acceptsReservations: false,
+            hasMenu: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/menu`,
+            openingHoursSpecification: [
+              {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'],
+                opens: '13:00',
+                closes: '22:00',
+              },
+              {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: ['Saturday','Sunday'],
+                opens: '12:00',
+                closes: '23:00',
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   )
 }

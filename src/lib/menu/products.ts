@@ -16,7 +16,7 @@ export interface DemoProduct {
   name: string
   description: string
   basePriceCents: number
-  category: 'pizza'
+  category: 'pizza' | 'bebida' | 'extra'
   imageUrl: string | null
   variants: DemoVariant[]
   ingredients: DemoIngredient[]

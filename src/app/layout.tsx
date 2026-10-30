@@ -8,13 +8,47 @@ const bricolage = Bricolage_Grotesque({
   variable: '--font-bricolage',
 })
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: 'PizzaFlow · Pizzería de barrio',
+    default: 'PizzaFlow · Pizzería de barrio — Pizza artesanal en Tuxtla',
     template: '%s · PizzaFlow',
   },
   description:
-    'Pide tu pizza en línea, personalízala y recógela en mostrador. Cocina y operación en tiempo real.',
+    'Pizzería de barrio con pedido en línea y recogida en mostrador. Pizzas artesanales, personalización al instante y cocina en tiempo real. 15-25 min.',
+  applicationName: 'PizzaFlow',
+  authors: [{ name: 'Grupo 4-C · UPChiapas' }],
+  creator: 'PizzaFlow',
+  publisher: 'PizzaFlow',
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'es_MX',
+    url: '/',
+    siteName: 'PizzaFlow',
+    title: 'PizzaFlow · Pizzería de barrio — Pizza artesanal en Tuxtla',
+    description:
+      'Pide tu pizza en línea, personalízala y recógela en mostrador. Horno bajo control y seguimiento en tiempo real.',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'PizzaFlow · Pizzería de barrio',
+    description:
+      'Pide tu pizza en línea y recógela en mostrador. 15-25 min, sin filas.',
+  },
 }
 
 export default function RootLayout({
