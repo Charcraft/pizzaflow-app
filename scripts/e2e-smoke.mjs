@@ -65,7 +65,25 @@ try {
 
   await page.getByRole('link', { name: 'Ir al checkout' }).click()
   await page.waitForURL(/\/checkout/)
-  await page.locator('#customer-name').fill('Carlos Prueba')
+  check(
+    'checkout pide cuenta',
+    await page.getByRole('heading', { name: 'Entra para pedir' }).isVisible(),
+  )
+
+  await page.goto(`${BASE}/registro`, { waitUntil: 'networkidle' })
+  await page.locator('#reg-name').fill('Cliente Prueba')
+  await page.locator('#reg-email').fill('cliente@test.com')
+  await page.locator('#reg-phone').fill('9611234567')
+  await page.locator('#reg-password').fill('cliente123')
+  await page.locator('#reg-confirm').fill('cliente123')
+  await page.getByRole('checkbox').check()
+  await page.getByRole('button', { name: 'Crear cuenta y pedir' }).click()
+  await page.waitForURL(/\/menu/, { timeout: 15000 })
+  await page.goto(`${BASE}/cuenta`, { waitUntil: 'networkidle' })
+  check('registro de cliente', await page.getByText('cliente@test.com').isVisible())
+
+  await page.goto(`${BASE}/checkout`, { waitUntil: 'networkidle' })
+  await page.locator('#customer-name').fill('Cliente Prueba')
   await page.locator('#customer-phone').fill('9611234567')
   await page.screenshot({ path: path.join(OUT, 'e2e-04-checkout.png'), fullPage: true })
   await page.getByRole('button', { name: /Confirmar pedido/ }).click()

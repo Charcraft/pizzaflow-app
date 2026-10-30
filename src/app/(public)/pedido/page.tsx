@@ -1,14 +1,47 @@
 'use client'
 
 import Link from 'next/link'
-import { useOrders } from '@/hooks/useOrders'
-import { formatMoney } from '@/lib/menu/products'
-import { STATUS_LABELS, SOURCE_LABELS } from '@/lib/orders/types'
 import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
+import { useOrders } from '@/hooks/useOrders'
+import { useSession } from '@/hooks/useSession'
+import { formatMoney } from '@/lib/menu/products'
+import { SOURCE_LABELS, STATUS_LABELS } from '@/lib/orders/types'
 
 export default function MyOrdersPage() {
-  const orders = useOrders().filter((order) => !order.isDemo)
+  const session = useSession()
+  const allOrders = useOrders()
+
+  if (!session) {
+    return (
+      <main className="mx-auto flex max-w-3xl flex-col items-center px-5 py-20 text-center sm:px-8">
+        <span className="flex h-16 w-16 items-center justify-center rounded-panel bg-paper text-tomato shadow-soft">
+          <Icon name="receipt" size={30} />
+        </span>
+        <h1 className="mt-5 font-display text-4xl tracking-tight text-ink">
+          Entra para ver tus pedidos
+        </h1>
+        <p className="mt-2 max-w-md text-sm leading-6 text-muted">
+          Inicia sesión o crea tu cuenta para guardar el historial y seguir tus
+          pedidos.
+        </p>
+        <div className="mt-6 flex w-full max-w-sm flex-col gap-2">
+          <ButtonLink href="/entrar" size="lg">
+            Iniciar sesión
+          </ButtonLink>
+          <ButtonLink href="/registro" variant="secondary" size="lg">
+            Crear cuenta
+          </ButtonLink>
+        </div>
+      </main>
+    )
+  }
+
+  const orders = allOrders.filter((order) => {
+    if (order.isDemo) return false
+    if (session.role === 'customer') return order.customerEmail === session.email
+    return true
+  })
 
   return (
     <main className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-14">
@@ -18,10 +51,10 @@ export default function MyOrdersPage() {
             Mi pedido
           </p>
           <h1 className="mt-2 font-display text-4xl tracking-tight text-ink sm:text-5xl">
-            Pedidos recientes.
+            Pedidos de {session.name.split(' ')[0]}.
           </h1>
           <p className="mt-2 text-sm text-muted">
-            Los pedidos hechos en este dispositivo. Guarda tu folio.
+            Los pedidos hechos con {session.email}.
           </p>
         </div>
         <ButtonLink href="/menu" size="md">

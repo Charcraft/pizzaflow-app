@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Icon } from '@/components/ui/Icon'
 import { LogoMark } from '@/components/ui/LogoMark'
 import { useSession } from '@/hooks/useSession'
-import { login } from '@/lib/auth/store'
+import { loginStaff, logout } from '@/lib/auth/store'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -21,7 +21,7 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
-    const result = await login(email, password)
+    const result = await loginStaff(email, password)
     setLoading(false)
 
     if (!result.ok) {
@@ -94,12 +94,24 @@ export default function LoginPage() {
               Ingresa con la cuenta del administrador.
             </p>
 
-            {session && (
+            {session && session.role !== 'customer' && (
               <div className="mt-4 rounded-card border border-basil/30 bg-basil/5 p-3 text-sm text-basil">
                 Ya hay una sesión activa como {session.name}.
                 <Link href="/interno" className="ml-1 font-medium underline">
                   Continuar al panel
                 </Link>
+              </div>
+            )}
+            {session && session.role === 'customer' && (
+              <div className="mt-4 rounded-card border border-amber/30 bg-amber/5 p-3 text-sm text-amber">
+                Tienes una sesión de cliente activa ({session.name}).
+                <button
+                  type="button"
+                  onClick={() => logout()}
+                  className="ml-1 font-medium underline"
+                >
+                  Cerrar sesión de cliente
+                </button>
               </div>
             )}
 

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useCart } from '@/hooks/useCart'
 import { usePromo } from '@/hooks/usePromo'
-import { formatMoney } from '@/lib/menu/products'
+import { formatMoney, DEMO_PRODUCTS } from '@/lib/menu/products'
 import { getPromoDiscount } from '@/lib/promotions'
 import { ButtonLink } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
@@ -84,7 +84,19 @@ export default function CartPage() {
               className="flex flex-col gap-4 rounded-card border border-line bg-paper p-4 shadow-soft sm:flex-row sm:items-center"
             >
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[12px] bg-[#F6E3C5] p-1.5">
-                <PizzaArt className="h-full" rotation={(Number(item.productId) * 11) % 18 - 9} />
+                {DEMO_PRODUCTS.find((product) => product.id === item.productId)?.category ===
+                'pizza' ? (
+                  <PizzaArt
+                    className="h-full"
+                    rotation={(Number(item.productId) * 11) % 18 - 9}
+                    variant={
+                      DEMO_PRODUCTS.find((product) => product.id === item.productId)
+                        ?.artVariant ?? 0
+                    }
+                  />
+                ) : (
+                  <Icon name="bag" size={24} className="text-tomato" />
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="text-sm font-semibold text-ink">{item.name}</h2>

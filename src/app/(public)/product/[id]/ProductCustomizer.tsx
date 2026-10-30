@@ -70,7 +70,7 @@ export function ProductCustomizer({ product }: { product: DemoProduct }) {
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_380px]">
         <div>
           <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-panel border border-line bg-[#F6E3C5]">
-            <PizzaArt className="h-[86%]" rotation={5} />
+            <PizzaArt className="h-[86%]" rotation={5} variant={product.artVariant ?? 0} />
             <span className="absolute left-4 top-4 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-medium text-muted">
               Hecha al momento
             </span>

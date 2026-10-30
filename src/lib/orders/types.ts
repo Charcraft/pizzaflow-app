@@ -38,6 +38,7 @@ export interface Order {
   status: OrderStatus
   customerName: string
   customerPhone: string
+  customerEmail: string
   tableNumber: number | null
   items: OrderItem[]
   subtotalCents: number
@@ -61,6 +62,7 @@ export interface CreateOrderInput {
   source: OrderSource
   customerName: string
   customerPhone?: string
+  customerEmail?: string
   tableNumber?: number | null
   items: CreateOrderItemInput[]
   paymentMethod?: PaymentMethod

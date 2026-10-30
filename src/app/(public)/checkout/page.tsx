@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useCart } from '@/hooks/useCart'
 import { usePromo } from '@/hooks/usePromo'
+import { useSession } from '@/hooks/useSession'
 import { createOrder } from '@/lib/orders/store'
 import type { PaymentMethod } from '@/lib/orders/types'
 import { buildOrderWhatsAppUrl } from '@/lib/orders/whatsapp'
@@ -28,6 +29,7 @@ const PAYMENT_HINTS: Record<Exclude<PaymentMethod, 'pending'>, string> = {
 export default function CheckoutPage() {
   const { items, totalCents, clearCart } = useCart()
   const { code, clearPromo } = usePromo()
+  const session = useSession()
   const router = useRouter()
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
@@ -43,6 +45,11 @@ export default function CheckoutPage() {
     event.preventDefault()
     setError('')
 
+    if (!session) {
+      setError('Inicia sesión para confirmar el pedido.')
+      return
+    }
+
     if (!customerName.trim()) {
       setError('Escribe el nombre de quien recoge el pedido.')
       return
@@ -50,8 +57,9 @@ export default function CheckoutPage() {
 
     const order = createOrder({
       source: 'web',
-      customerName,
-      customerPhone,
+      customerName: customerName || session.name,
+      customerPhone: customerPhone || session.phone,
+      customerEmail: session.email,
       items: items.map((item) => ({
         productId: item.productId,
         name: item.name,
@@ -87,6 +95,34 @@ export default function CheckoutPage() {
         <ButtonLink href="/menu" size="lg" className="mt-6">
           Ver el menú
         </ButtonLink>
+      </main>
+    )
+  }
+
+  if (!session) {
+    return (
+      <main className="mx-auto flex max-w-6xl flex-col items-center px-5 py-20 text-center sm:px-8">
+        <span className="flex h-16 w-16 items-center justify-center rounded-panel bg-paper text-tomato shadow-soft">
+          <Icon name="users" size={30} />
+        </span>
+        <h1 className="mt-5 font-display text-4xl tracking-tight text-ink">
+          Entra para pedir
+        </h1>
+        <p className="mt-2 max-w-md text-sm leading-6 text-muted">
+          Crea tu cuenta o inicia sesión para guardar el pedido, verlo en “Mi
+          pedido” y enviarlo al WhatsApp del dueño.
+        </p>
+        <div className="mt-6 flex w-full max-w-sm flex-col gap-2">
+          <ButtonLink href="/entrar?next=/checkout" size="lg">
+            Iniciar sesión
+          </ButtonLink>
+          <ButtonLink href="/registro" variant="secondary" size="lg">
+            Crear cuenta
+          </ButtonLink>
+        </div>
+        <Link href="/cart" className="mt-5 text-xs text-muted hover:text-ink">
+          Volver al carrito
+        </Link>
       </main>
     )
   }
@@ -134,6 +170,14 @@ export default function CheckoutPage() {
 
       <form onSubmit={handleSubmit} className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="space-y-4">
+          <div className="flex items-center justify-between gap-3 rounded-card border border-line bg-cream/60 px-3.5 py-2.5 text-xs">
+            <span className="text-muted">
+              Pedido como <strong className="text-ink">{session.name}</strong> · {session.email}
+            </span>
+            <Link href="/cuenta" className="font-medium text-tomato hover:underline">
+              Mi cuenta
+            </Link>
+          </div>
           <section className="rounded-panel border border-line bg-paper p-5 shadow-soft">
             <h2 className="text-sm font-semibold">¿Quién recoge?</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -148,7 +192,7 @@ export default function CheckoutPage() {
                   value={customerName}
                   onChange={(event) => setCustomerName(event.target.value)}
                   className="h-11 w-full rounded-[10px] border border-line bg-paper px-3 text-sm focus:border-tomato focus:outline-none"
-                  placeholder="Nombre completo"
+                  placeholder={session.name || 'Nombre completo'}
                 />
               </div>
               <div>
@@ -161,7 +205,7 @@ export default function CheckoutPage() {
                   value={customerPhone}
                   onChange={(event) => setCustomerPhone(event.target.value)}
                   className="h-11 w-full rounded-[10px] border border-line bg-paper px-3 text-sm focus:border-tomato focus:outline-none"
-                  placeholder="55 1234 5678"
+                  placeholder={session.phone || '55 1234 5678'}
                 />
               </div>
             </div>

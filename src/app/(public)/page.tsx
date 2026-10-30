@@ -85,7 +85,7 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted">
               <span className="flex items-center gap-1.5">
                 <Icon name="check" size={14} className="text-basil" />
-                Sin apps ni registros
+                Cuenta en 1 minuto
               </span>
               <span className="flex items-center gap-1.5">
                 <Icon name="check" size={14} className="text-basil" />

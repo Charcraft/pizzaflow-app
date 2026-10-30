@@ -20,6 +20,8 @@ export interface DemoProduct {
   imageUrl: string | null
   variants: DemoVariant[]
   ingredients: DemoIngredient[]
+  artVariant?: number
+  badge?: string
 }
 
 const PIZZA_VARIANTS: DemoVariant[] = [
@@ -46,6 +48,8 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: PIZZA_VARIANTS,
     ingredients: EXTRA_INGREDIENTS,
+    artVariant: 0,
+    badge: 'Clásica',
   },
   {
     id: '2',
@@ -56,6 +60,8 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: PIZZA_VARIANTS,
     ingredients: EXTRA_INGREDIENTS,
+    artVariant: 1,
+    badge: 'Más vendida',
   },
   {
     id: '3',
@@ -66,6 +72,8 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: PIZZA_VARIANTS,
     ingredients: EXTRA_INGREDIENTS,
+    artVariant: 2,
+    badge: 'Dulce',
   },
   {
     id: '4',
@@ -76,6 +84,8 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: PIZZA_VARIANTS,
     ingredients: EXTRA_INGREDIENTS,
+    artVariant: 3,
+    badge: 'Cuatro quesos',
   },
   {
     id: '5',
@@ -86,6 +96,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: [],
     ingredients: [],
+    badge: 'Fría',
   },
   {
     id: '6',
@@ -96,6 +107,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: [],
     ingredients: [],
+    badge: 'Fría',
   },
   {
     id: '7',
@@ -106,6 +118,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: [],
     ingredients: [],
+    badge: 'Para compartir',
   },
   {
     id: '8',
@@ -116,6 +129,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     imageUrl: null,
     variants: [],
     ingredients: [],
+    badge: 'Extra',
   },
 ]
 

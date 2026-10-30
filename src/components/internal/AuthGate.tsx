@@ -47,5 +47,34 @@ export function AuthGate({ children }: { children: ReactNode }) {
     )
   }
 
+  if (session.role === 'customer') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#F3F0EA] p-5">
+        <div className="w-full max-w-md rounded-panel border border-line bg-paper p-7 text-center shadow-soft">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-tomato/10 text-tomato">
+            <Icon name="users" size={26} />
+          </span>
+          <h1 className="mt-4 text-xl font-semibold tracking-tight">Área del equipo</h1>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            Tu cuenta es de cliente. Para pedir, vuelve al menú; para operar el
+            negocio, entra con una cuenta del personal.
+          </p>
+          <Link
+            href="/menu"
+            className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-[10px] bg-tomato text-sm font-medium text-white hover:bg-tomato-deep"
+          >
+            Ir al menú
+          </Link>
+          <Link
+            href="/cuenta"
+            className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-[10px] border border-line text-sm text-ink hover:bg-cream"
+          >
+            Mi cuenta
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return <>{children}</>
 }
